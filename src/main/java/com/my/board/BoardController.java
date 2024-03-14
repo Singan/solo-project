@@ -20,4 +20,8 @@ public class BoardController {
         return boardService.boardInsert(boardInsertDto);
     }
 
+    @DeleteMapping
+    public void boardDelete(@RequestParam Long boardNo){
+    }
+
 }

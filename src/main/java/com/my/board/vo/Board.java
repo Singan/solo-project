@@ -1,9 +1,7 @@
 package com.my.board.vo;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
+import com.my.user.vo.User;
+import jakarta.persistence.*;
 import lombok.*;
 
 @Entity
@@ -15,10 +13,15 @@ public class Board {
     private Long id;
 
     private String title;
+    @JoinColumn
+    @ManyToOne
+    private User writer;
+
     private String content;
     @Builder
-    public Board(String title, String content) {
+    public Board(String title, Long writer, String content) {
         this.title = title;
+        this.writer = new User(writer);
         this.content = content;
     }
 }
