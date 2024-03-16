@@ -19,6 +19,10 @@ public class BoardController {
     public Long boardInsert(@RequestBody BoardInsertDto boardInsertDto){
         return boardService.boardInsert(boardInsertDto);
     }
+    @GetMapping
+    public String boardList(){
+        return "test";
+    }
 
     @DeleteMapping
     public void boardDelete(@RequestParam Long boardNo){
