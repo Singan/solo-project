@@ -21,7 +21,8 @@ public class User {
     private String type;
 
     @Builder
-    public User(String id, String pw, String name, String type) {
+    public User(Long no,String id, String pw, String name, String type) {
+        this.no = no;
         this.id = id;
         this.pw = pw;
         this.name = name;

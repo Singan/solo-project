@@ -1,5 +1,6 @@
 package com.my.config;
 
+import com.my.config.jwt.JwtAuthFilter;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
@@ -15,6 +16,7 @@ import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
+import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.CorsConfigurationSource;
 
@@ -24,6 +26,7 @@ import java.util.Collections;
 @Configuration
 @EnableWebSecurity
 public class MySecurity {
+    private final JwtAuthFilter jwtAuthFilter;
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
 
@@ -36,11 +39,12 @@ public class MySecurity {
                             return config;
                         }
                 )).authorizeHttpRequests((requests) -> requests
-                        .requestMatchers(HttpMethod.POST,"/user").permitAll()
-                        .requestMatchers(HttpMethod.GET,"/board/test","/user/test","/board").permitAll()
+                        .requestMatchers(HttpMethod.POST,"/user", "/user/login").permitAll()
+                        .requestMatchers(HttpMethod.GET,"/board/test","/user/test").permitAll()
                         .anyRequest().authenticated() // 그 외 인증 없이 접근X
                 )
-                .csrf(AbstractHttpConfigurer::disable).httpBasic(HttpBasicConfigurer::disable);
+                .csrf(AbstractHttpConfigurer::disable).httpBasic(HttpBasicConfigurer::disable)
+                .addFilterBefore(jwtAuthFilter , UsernamePasswordAuthenticationFilter.class);
         return http.build();
 
     }
