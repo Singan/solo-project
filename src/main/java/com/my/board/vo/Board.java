@@ -21,7 +21,7 @@ public class Board {
     @Builder
     public Board(String title, Long writer, String content) {
         this.title = title;
-        this.writer = new User(writer);
+        this.writer = User.builder().no(writer).build();
         this.content = content;
     }
 }

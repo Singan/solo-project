@@ -1,5 +1,6 @@
 package com.my.config.jwt;
 
+import com.my.aop.LogClass;
 import com.my.user.UserService;
 import com.my.user.vo.User;
 import com.my.user.vo.UserDetailsDto;
@@ -18,6 +19,7 @@ import org.springframework.web.filter.OncePerRequestFilter;
 import java.io.IOException;
 @Component
 @RequiredArgsConstructor
+@LogClass
 public class JwtAuthFilter extends OncePerRequestFilter {
     private final JwtProvider jwtProvider;
     public Authentication getAuthentication(User user) {

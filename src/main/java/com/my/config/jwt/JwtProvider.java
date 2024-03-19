@@ -1,5 +1,6 @@
 package com.my.config.jwt;
 
+import com.my.aop.LogClass;
 import com.my.user.vo.User;
 import io.jsonwebtoken.*;
 import io.jsonwebtoken.io.Decoders;
@@ -19,7 +20,7 @@ import java.util.Map;
 import java.util.stream.Collectors;
 
 @Component
-@Slf4j
+@LogClass
 public class JwtProvider {
 
     private final String secret;
@@ -97,7 +98,6 @@ public class JwtProvider {
 
     public User getTokenConvertUser (final String token) { // 토큰을 유저 객체로 바꾸어준다.
         Claims claims = getClaimsFormToken(token);
-        log.info("claims = {}" , claims);
         String type = claims.get("userType").toString();
         Long no = Long.parseLong(claims.get("userNo").toString());
         String name = claims.get("userName").toString();

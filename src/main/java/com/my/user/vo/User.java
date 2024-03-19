@@ -29,7 +29,4 @@ public class User {
         this.type = type;
     }
 
-    public User(Long no) {
-        this.no = no;
-    }
 }

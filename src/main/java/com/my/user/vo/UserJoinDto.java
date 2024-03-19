@@ -1,8 +1,10 @@
 package com.my.user.vo;
 
+import lombok.AllArgsConstructor;
 import lombok.Data;
 
 @Data
+@AllArgsConstructor
 public class UserJoinDto {
 
     private String id;

@@ -1,5 +1,6 @@
 package com.my.user;
 
+import com.my.aop.LogClass;
 import com.my.config.jwt.JwtProvider;
 import com.my.user.vo.User;
 import com.my.user.vo.UserJoinDto;
@@ -12,6 +13,7 @@ import org.springframework.transaction.annotation.Transactional;
 @Service
 @RequiredArgsConstructor
 @Transactional(readOnly = true)
+@LogClass
 public class UserService {
     private final UserRepository userRepository;
     private final PasswordEncoder passwordEncoder;

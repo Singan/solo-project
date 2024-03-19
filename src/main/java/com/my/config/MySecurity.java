@@ -1,5 +1,6 @@
 package com.my.config;
 
+import com.my.aop.LogClass;
 import com.my.config.jwt.JwtAuthFilter;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.http.HttpServletRequest;
@@ -25,6 +26,7 @@ import java.util.Collections;
 @RequiredArgsConstructor
 @Configuration
 @EnableWebSecurity
+@LogClass
 public class MySecurity {
     private final JwtAuthFilter jwtAuthFilter;
     @Bean
@@ -40,8 +42,8 @@ public class MySecurity {
                         }
                 )).authorizeHttpRequests((requests) -> requests
                         .requestMatchers(HttpMethod.POST,"/user", "/user/login").permitAll()
-                        .requestMatchers(HttpMethod.GET,"/board/test","/user/test").permitAll()
-                        .anyRequest().authenticated() // 그 외 인증 없이 접근X
+                        .requestMatchers(HttpMethod.GET,"/board","/user/test").permitAll()
+                        .anyRequest().authenticated()
                 )
                 .csrf(AbstractHttpConfigurer::disable).httpBasic(HttpBasicConfigurer::disable)
                 .addFilterBefore(jwtAuthFilter , UsernamePasswordAuthenticationFilter.class);
