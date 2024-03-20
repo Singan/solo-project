@@ -20,7 +20,6 @@ import java.util.Map;
 import java.util.stream.Collectors;
 
 @Component
-@LogClass
 public class JwtProvider {
 
     private final String secret;

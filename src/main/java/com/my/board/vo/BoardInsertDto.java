@@ -5,12 +5,8 @@ import com.my.user.vo.UserDetailsDto;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 
-@Getter
-@AllArgsConstructor
-public class BoardInsertDto {
+public record BoardInsertDto(String title,String content) {
 
-    private String title;
-    private String content;
     public Board createBoard(UserDetailsDto userDetailsDto) {
         Long no = userDetailsDto.getNo();
         Board board = Board.

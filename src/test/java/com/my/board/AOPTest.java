@@ -1,6 +1,6 @@
 package com.my.board;
 
-import com.my.aop.MyAspect;
+import com.my.aop.LogTrace;
 import com.my.board.vo.BoardInsertDto;
 import com.my.user.UserRepository;
 import com.my.user.UserService;
@@ -18,7 +18,7 @@ import org.springframework.context.annotation.Import;
 
 @SpringBootTest
 @Slf4j
-@Import(MyAspect.class)
+@Import(LogTrace.class)
 public class AOPTest {
     @Autowired
     BoardService boardService;
