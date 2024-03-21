@@ -14,12 +14,13 @@ public class Board {
 
     private String title;
     @JoinColumn
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     private User writer;
 
     private String content;
     @Builder
-    public Board(String title, Long writer, String content) {
+    public Board(Long id,String title, Long writer, String content) {
+        this.id = id;
         this.title = title;
         this.writer = User.builder().no(writer).build();
         this.content = content;

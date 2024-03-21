@@ -3,6 +3,7 @@ package com.my.board;
 import com.my.aop.LogClass;
 import com.my.board.vo.BoardInsertDto;
 import com.my.board.vo.BoardListViewDto;
+import com.my.board.vo.BoardViewDto;
 import com.my.board.vo.ListResult;
 import com.my.user.vo.UserDetailsDto;
 import lombok.RequiredArgsConstructor;
@@ -33,14 +34,19 @@ public class BoardController {
 
     @GetMapping("/list")
     public ListResult boardList(
-            @PageableDefault(size = 12, sort = "id", direction = Sort.Direction.DESC)
+            @PageableDefault(size = 2, sort = "id", direction = Sort.Direction.DESC)
             Pageable pageable
     ) {
         return boardService.boardList(pageable);
     }
-
+    @GetMapping("/detail/{boardNo}")
+    public BoardViewDto boardList(@PathVariable Long boardNo) {
+        return boardService.boardFindOne(boardNo);
+    }
     @DeleteMapping
-    public void boardDelete(@RequestParam Long boardNo) {
+    public void boardDelete(@RequestParam Long boardNo,  @AuthenticationPrincipal UserDetailsDto userDetailsDto) {
+
+        boardService.boardDelete(boardNo,userDetailsDto);
     }
 
 }
