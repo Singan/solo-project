@@ -1,48 +1,41 @@
-package com.my.board.vo;
+package com.my.reply.vo;
 
-import com.my.reply.vo.Reply;
+import com.my.board.vo.Board;
 import com.my.user.vo.User;
 import jakarta.persistence.*;
-import lombok.*;
+import lombok.AccessLevel;
+import lombok.Builder;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
 import org.springframework.data.annotation.CreatedDate;
 
 import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.List;
 
 @Entity
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-public class Board {
+public class Reply {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    private String title;
     @JoinColumn
     @ManyToOne(fetch = FetchType.LAZY)
     private User writer;
-
-    @OneToMany(mappedBy = "board")
-    private List<Reply> replyList = new ArrayList<>();
-
+    @JoinColumn
+    @ManyToOne(fetch = FetchType.LAZY)
+    private Board board;
     @CreatedDate
     private LocalDateTime dateTime;
 
     private String content;
+
     @Builder
-    public Board(Long id,String title, Long writer, String content , LocalDateTime dateTime) {
-        this.id = id;
-        this.title = title;
+    public Reply(Long replyNo, Long boardNo, Long writer, String content, LocalDateTime dateTime) {
+        this.id = replyNo;
+        this.board = Board.builder().id(boardNo).build();
         this.writer = User.builder().no(writer).build();
         this.content = content;
         this.dateTime = dateTime;
-    }
-
-    public Long boardUpdate(String title , String content){
-        this.title = title;
-        this.content = content;
-        dateTime = LocalDateTime.now();
-        return this.getId();
     }
 }

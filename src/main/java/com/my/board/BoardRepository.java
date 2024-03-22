@@ -19,8 +19,16 @@ public interface BoardRepository extends JpaRepository<Board, Long> {
     @Query("select new com.my.board.vo.BoardListViewDto(b.id , b.title) from Board b")
     Page<BoardListViewDto> findPageableList(Pageable pageable);
 
-    @EntityGraph(attributePaths = {"writer"})
+    @EntityGraph(attributePaths = {"writer" })
     Optional<Board> findById(Long id);
+
+
+    @Query("select distinct b from Board b  " +
+            "left join fetch b.writer w " +
+            "left join fetch b.replyList r " +
+            "left join fetch r.writer wr " +
+            "where b.id = :no ")
+    Optional<Board> findByIdWithAndReplyList(@Param("no") Long no);
 
     @Modifying
     void deleteByIdAndWriter(@Param("no")Long no, @Param("writer") User writer);
