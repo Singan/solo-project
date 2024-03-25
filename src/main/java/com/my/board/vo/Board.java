@@ -4,6 +4,7 @@ import com.my.reply.vo.Reply;
 import com.my.user.vo.User;
 import jakarta.persistence.*;
 import lombok.*;
+import org.hibernate.annotations.BatchSize;
 import org.springframework.data.annotation.CreatedDate;
 
 import java.time.LocalDateTime;
@@ -24,6 +25,7 @@ public class Board {
     private User writer;
 
     @OneToMany(mappedBy = "board")
+    @BatchSize(size = 2)
     private List<Reply> replyList = new ArrayList<>();
 
     @CreatedDate

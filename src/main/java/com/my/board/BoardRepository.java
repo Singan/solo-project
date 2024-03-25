@@ -3,6 +3,7 @@ package com.my.board;
 import com.my.board.vo.Board;
 import com.my.board.vo.BoardListViewDto;
 import com.my.user.vo.User;
+import org.hibernate.annotations.BatchSize;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.EntityGraph;
@@ -23,19 +24,14 @@ public interface BoardRepository extends JpaRepository<Board, Long> {
     Optional<Board> findById(Long id);
 
 
-    @Query("select distinct b from Board b  " +
-            "left join fetch b.writer w " +
-            "left join fetch b.replyList r " +
-            "left join fetch r.writer wr " +
+    @Query("select distinct b from Board b " +
+            " join fetch b.replyList reply  " +
+            " join fetch b.writer wr " +
+            " join fetch reply.writer rwr " +
             "where b.id = :no ")
     Optional<Board> findByIdWithAndReplyList(@Param("no") Long no);
 
     @Modifying
     void deleteByIdAndWriter(@Param("no")Long no, @Param("writer") User writer);
-    
-    //왜 DELETE를 하는데 SELECT가 나가는가?
-    //DeleteExecution 클래스에서 doExecute 메서드를 통해 삭제 조건에 부합하는 엔티티 목록을 SELECT 한다.
-    //여러 SELECT 쿼리가 나가는 이유는 무엇인가?
-    //엔티티가 삭제될 때 연관관계의 엔티티도 삭제하기 위해서다.
-    //해결법을 찾아야함
+
 }
