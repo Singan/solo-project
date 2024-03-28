@@ -38,8 +38,4 @@ public class Reply {
         this.content = content;
         this.dateTime = dateTime;
     }
-
-    public void setContent(String content) {
-        this.content = content;
-    }
 }
