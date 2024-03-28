@@ -1,7 +1,6 @@
 package com.my.board;
 
 import com.my.aop.LogTrace;
-import com.my.board.BoardService;
 import com.my.board.vo.BoardInsertDto;
 import com.my.user.UserRepository;
 import com.my.user.UserService;

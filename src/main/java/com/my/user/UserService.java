@@ -18,28 +18,22 @@ public class UserService {
     private final UserRepository userRepository;
     private final PasswordEncoder passwordEncoder;
     private final JwtProvider jwtProvider;
-
     @Transactional
-    public void userJoin(UserJoinDto userJoinDto) {
-        if (userExist(userJoinDto.getId())) {
+    public void userJoin(UserJoinDto userJoinDto){
+        if(userExist(userJoinDto.getId())){
             throw new IllegalStateException("중복된 계정입니다.");
-        }
-
+        };
         userJoinDto.setPw(passwordEncoder.encode(userJoinDto.getPw()));
 
 
         userRepository.save(userJoinDto.getUser());
     }
 
-    private boolean userExist(String id) {
+    private boolean userExist(String id){
         return userRepository.existsUserById(id);
     }
+    public String userLogin(UserLoginDto userLoginDto){
+        return jwtProvider.createToken(userRepository.findUserById(userLoginDto.getId()));
 
-    public String userLogin(UserLoginDto userLoginDto) {
-        if (userExist(userLoginDto.getId())) {
-            return jwtProvider.createToken(userRepository.findUserById(userLoginDto.getId()));
-        }else{
-            throw new RuntimeException("없는 유저입니다.");
-        }
     }
 }

@@ -16,7 +16,6 @@ import org.springframework.transaction.annotation.Transactional;
 @Transactional(readOnly = true)
 public class ReplyService {
     private final ReplyRepository replyRepository;
-
     @Transactional
     public void replyInsert(ReplyInsertDto replyInsertDto, UserDetailsDto userDetailsDto) {
 
@@ -29,33 +28,33 @@ public class ReplyService {
         replyRepository.save(reply);
     }
 
-    private boolean checkPermissions(Long replyNo, Long userNo) {
-        try {
+    private boolean checkPermissions(Long replyNo , Long userNo){
+        try{
             Reply reply = findOneReply(replyNo);
-            if (reply.getWriter().getNo() == userNo) {
+            if(reply.getWriter().getNo() == userNo){
                 return true;
-            } else {
+            }else {
                 return false;
             }
-        } catch (Exception e) {
+        }catch (Exception e){
             throw e;
         }
     }
 
-    private Reply findOneReply(Long replyNo) {
+    private Reply findOneReply(Long replyNo){
         return replyRepository.findById(replyNo).orElseThrow(() -> new RuntimeException("없는 댓글 입니다."));
     }
-
     @Transactional
     public void replyUpdate(ReplyUpdateDto replyUpdateDto, UserDetailsDto userDetailsDto) {
         Long replyNo = replyUpdateDto.replyNo();
-        if (checkPermissions(replyNo, userDetailsDto.getNo())) {
-            Reply reply = findOneReply(replyNo);
-            reply.setContent(replyUpdateDto.content());
+        checkPermissions(replyNo , userDetailsDto.getNo());
 
-            replyRepository.save(reply);
-        }else{
-            throw new RuntimeException("댓글 권한이 없습니다.");
-        }
+
+        Reply reply = Reply.builder()
+                .replyNo(replyNo)
+                .content(replyUpdateDto.content()).build();
+
+
+        replyRepository.save(reply);
     }
 }
