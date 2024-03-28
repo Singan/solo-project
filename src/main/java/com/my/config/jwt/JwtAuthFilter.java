@@ -10,6 +10,7 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
+import org.springframework.context.ApplicationContext;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -28,21 +29,14 @@ public class JwtAuthFilter extends OncePerRequestFilter {
     @Override
     protected void doFilterInternal(HttpServletRequest request, @NonNull HttpServletResponse response, @NonNull FilterChain chain)
             throws IOException, ServletException {
-
         String token = request.getHeader("X-AUTH-TOKEN");
-
         if (jwtProvider.isValidToken(token)) {
             User user = jwtProvider.getTokenConvertUser(token);
             if (user != null) {
                 SecurityContextHolder.getContext().setAuthentication(getAuthentication(user));
             }
-
-
         }
 
         chain.doFilter(request, response);
-
     }
-
-
 }
