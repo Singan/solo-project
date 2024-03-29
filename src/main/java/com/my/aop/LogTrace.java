@@ -29,6 +29,7 @@ public class LogTrace {
             result = joinPoint.proceed();
         }catch (Exception e){
             log.info("exception 발생 {} " , e);
+            throw e;
         }
         long endMills = System.currentTimeMillis() - startMills;
         log.info("{} 메서드 실행 소요 시간 : {}", joinPoint.getSignature(), endMills);
