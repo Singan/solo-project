@@ -5,6 +5,7 @@ import com.my.user.vo.User;
 import com.my.user.vo.UserJoinDto;
 import com.my.user.vo.UserLoginDto;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.HttpStatusCode;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -27,12 +28,16 @@ public class UserController {
 
         } catch (Exception e) {
 
-            return ResponseEntity.status(HttpStatusCode.valueOf(400)).body(e.getMessage());
+            return ResponseEntity.status(HttpStatus.CONFLICT).body(e.getMessage());
         }
     }
 
     @PostMapping("/login")
-    public String userLogin(@RequestBody UserLoginDto userLoginDto) {
-        return userService.userLogin(userLoginDto);
+    public ResponseEntity userLogin(@RequestBody UserLoginDto userLoginDto) {
+        try {
+            return ResponseEntity.ok().body("token:" + userService.userLogin(userLoginDto));
+        } catch (Exception e) {
+            return ResponseEntity.badRequest().body(e.getMessage());
+        }
     }
 }

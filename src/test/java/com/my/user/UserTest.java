@@ -81,4 +81,34 @@ public class UserTest {
         //then
         result.andExpect(MockMvcResultMatchers.status().isOk()).andDo(MockMvcResultHandlers.print());
     }
+    @Test
+    @DisplayName("유저 로그인 실패(존재하지 않는 사용자)")
+    void userLoginFailNotFound() throws Exception{
+        //given
+        UserLoginDto userLoginDto = new UserLoginDto(id + "12313123" , pw + "dasdasd");
+        String body = objectMapper.writeValueAsString(userLoginDto);
+
+        //when
+        ResultActions result = mockMvc.perform(
+                MockMvcRequestBuilders.post("/user/login")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(body));
+        //then
+        result.andExpect(MockMvcResultMatchers.status().is4xxClientError()).andDo(MockMvcResultHandlers.print());
+    }
+    @Test
+    @DisplayName("유저 로그인 실패(비밀번호 불일치)")
+    void userLoginFailPw() throws Exception{
+        //given
+        UserLoginDto userLoginDto = new UserLoginDto(id, pw + "dasdasd");
+        String body = objectMapper.writeValueAsString(userLoginDto);
+
+        //when
+        ResultActions result = mockMvc.perform(
+                MockMvcRequestBuilders.post("/user/login")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(body));
+        //then
+        result.andExpect(MockMvcResultMatchers.status().is4xxClientError()).andDo(MockMvcResultHandlers.print());
+    }
 }
