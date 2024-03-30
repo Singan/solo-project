@@ -27,7 +27,7 @@ public class AOPTest {
     @Autowired
     UserRepository userRepository;
     @BeforeEach
-    void init(){
+    void init() throws Exception {
         userService.userJoin(new UserJoinDto("id","pw","name","type"));
     }
     @Test

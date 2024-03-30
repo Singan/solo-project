@@ -19,11 +19,10 @@ public class UserService {
     private final PasswordEncoder passwordEncoder;
     private final JwtProvider jwtProvider;
     @Transactional
-    public void userJoin(UserJoinDto userJoinDto){
+    public void userJoin(UserJoinDto userJoinDto) throws Exception{
         if(userExist(userJoinDto.id())){
-            throw new IllegalStateException("중복된 계정입니다.");
+            throw new Exception("중복된 계정입니다.");
         };
-
 
 
         userRepository.save(userJoinDto.getUser(passwordEncoder));

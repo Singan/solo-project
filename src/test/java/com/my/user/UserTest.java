@@ -1,6 +1,7 @@
 package com.my.user;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.my.user.vo.UserDetailsDto;
 import com.my.user.vo.UserJoinDto;
 import com.my.user.vo.UserLoginDto;
 import org.junit.jupiter.api.DisplayName;
@@ -20,6 +21,8 @@ import org.springframework.transaction.annotation.Transactional;
 
 @SpringBootTest
 @AutoConfigureMockMvc
+@Rollback
+@Transactional
 public class UserTest {
 
     @Autowired
@@ -32,13 +35,15 @@ public class UserTest {
 
     @Test
     @DisplayName("유저 회원가입 성공")
-    @Rollback
     void userJoinSuccess() throws Exception {
         //given
         UserJoinDto userJoinDto = new UserJoinDto("새로운 유저" , "비밀번호","이름" , "없음");
         String body = objectMapper.writeValueAsString(userJoinDto);
         //when
-        ResultActions result = mockMvc.perform(MockMvcRequestBuilders.post("/user").content(body));
+        ResultActions result = mockMvc.perform(
+                MockMvcRequestBuilders.post("/user")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(body));
 
         //then
         result.andExpect(MockMvcResultMatchers.status().isOk()).andDo(MockMvcResultHandlers.print());
@@ -52,7 +57,10 @@ public class UserTest {
         UserJoinDto userJoinDto = new UserJoinDto(id , pw,"이름" , "없음");
         String body = objectMapper.writeValueAsString(userJoinDto);
         //when
-        ResultActions result = mockMvc.perform(MockMvcRequestBuilders.post("/user").content(body));
+        ResultActions result = mockMvc.perform(
+                MockMvcRequestBuilders.post("/user")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(body));
         //then
         result.andExpect(MockMvcResultMatchers.status().is4xxClientError()).andDo(MockMvcResultHandlers.print());
 
