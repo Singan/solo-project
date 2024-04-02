@@ -38,7 +38,7 @@ public class BoardController {
         return boardService.boardList(pageable);
     }
 
-    @GetMapping("/detail/{boardNo}")
+    @GetMapping("/{boardNo}")
     public BoardViewDto boardDetail(@PathVariable Long boardNo) {
         return boardService.boardDetail(boardNo);
     }
