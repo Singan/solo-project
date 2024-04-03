@@ -32,13 +32,12 @@ public class BoardTest {
     @Autowired
     ObjectMapper objectMapper;
 
-    int boardNo = 5;
+    int boardNo = 3;
 
     @Autowired
     JwtProvider jwtProvider;
-
     String token;
-
+    String url = "/board";
     @BeforeEach
     void token() {
         //미리 준비된 유저 계정 객체 생성
@@ -59,7 +58,7 @@ public class BoardTest {
         String body = objectMapper.writeValueAsString(boardInsertDto);
         //when
         ResultActions result = mockMvc.perform(
-                MockMvcRequestBuilders.post("/board")
+                MockMvcRequestBuilders.post(url)
                         .content(body)
                         .contentType(MediaType.APPLICATION_JSON)
                         .header("X-AUTH-TOKEN", token)
@@ -77,7 +76,7 @@ public class BoardTest {
         String body = objectMapper.writeValueAsString(boardUpdateDto);
         //when
         ResultActions result = mockMvc.perform(
-                MockMvcRequestBuilders.put("/board/"+boardNo)
+                MockMvcRequestBuilders.put(url+"/"+boardNo)
                         .content(body)
                         .contentType(MediaType.APPLICATION_JSON)
                         .header("X-AUTH-TOKEN", token)
@@ -95,9 +94,41 @@ public class BoardTest {
 
         //when
         ResultActions result = mockMvc.perform(
-                MockMvcRequestBuilders.delete("/board/"+boardNo)
+                MockMvcRequestBuilders.delete(url+"/"+boardNo)
                         .contentType(MediaType.APPLICATION_JSON)
                         .header("X-AUTH-TOKEN", token)
+        );
+
+        //then
+        result.andExpect(MockMvcResultMatchers.status().isOk()).andDo(MockMvcResultHandlers.print());
+
+    }
+    @Test
+    @DisplayName("글 상세 조회")
+    void boardDetail() throws Exception {
+        //given
+
+
+        //when
+        ResultActions result = mockMvc.perform(
+                MockMvcRequestBuilders.get(url+"/"+boardNo)
+                        .contentType(MediaType.APPLICATION_JSON)
+        );
+
+        //then
+        result.andExpect(MockMvcResultMatchers.status().isOk()).andDo(MockMvcResultHandlers.print());
+
+    }
+    @Test
+    @DisplayName("글 리스트 조회")
+    void boardList() throws Exception {
+        //given
+        int pageNo = 1;
+
+        //when
+        ResultActions result = mockMvc.perform(
+                MockMvcRequestBuilders.get(url+"?pageNo=" + pageNo)
+                        .contentType(MediaType.APPLICATION_JSON)
         );
 
         //then

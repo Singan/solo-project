@@ -53,13 +53,11 @@ public class BoardService {
     @Transactional
     public void boardDelete(Long boardNo, UserDetailsDto userDetailsDto) throws Exception {
 
-        Board board = boardFindOne(boardNo);
-        System.out.println("보드 딜리트" + userDetailsDto.getNo());
+        Board board = boardFindOneWithReply(boardNo);
         if( board.getWriter().getNo() != userDetailsDto.getNo()){
             throw new RuntimeException("불일치한 사용자입니다.");
         }
-        boardRepository.delete(board);
-        System.out.println("왜 보드 딜리트가 안되지");
+        boardRepository.deleteById(board.getId());
     }
     @Transactional
     public Long boardUpdate(BoardUpdateDto boardUpdateDto,UserDetailsDto userDetailsDto,Long boardNo) throws AuthenticationException {
