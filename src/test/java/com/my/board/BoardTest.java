@@ -20,17 +20,19 @@ import org.springframework.test.web.servlet.ResultActions;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.test.web.servlet.result.MockMvcResultHandlers;
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
+import org.springframework.transaction.annotation.Transactional;
 
 @SpringBootTest
 @AutoConfigureMockMvc
+@Transactional
 public class BoardTest {
     @Autowired
     MockMvc mockMvc;
 
     @Autowired
     ObjectMapper objectMapper;
-    String title = " 글 제목 ";
-    String content = " 글 제목 ";
+
+    int boardNo = 5;
 
     @Autowired
     JwtProvider jwtProvider;
@@ -51,10 +53,9 @@ public class BoardTest {
 
     @Test
     @DisplayName("글쓰기")
-    @Rollback
     void boardInsert() throws Exception {
         //given
-        BoardInsertDto boardInsertDto = new BoardInsertDto("타이틀", "콘텐트");
+        BoardInsertDto boardInsertDto = new BoardInsertDto("글 추가 테스트 코드 제목", "글 추가 테스트코드 내용");
         String body = objectMapper.writeValueAsString(boardInsertDto);
         //when
         ResultActions result = mockMvc.perform(
@@ -66,19 +67,17 @@ public class BoardTest {
 
         //then
         result.andExpect(MockMvcResultMatchers.status().isOk()).andDo(MockMvcResultHandlers.print());
-
     }
 
     @Test
     @DisplayName("글 수정")
-    @Rollback
     void boardUpdate() throws Exception {
         //given
-        BoardUpdateDto boardUpdateDto = new BoardUpdateDto(1L,"타이틀 수정", "콘텐트 수정");
+        BoardUpdateDto boardUpdateDto = new BoardUpdateDto("타이틀 수정", "콘텐트 수정");
         String body = objectMapper.writeValueAsString(boardUpdateDto);
         //when
         ResultActions result = mockMvc.perform(
-                MockMvcRequestBuilders.put("/board")
+                MockMvcRequestBuilders.put("/board/"+boardNo)
                         .content(body)
                         .contentType(MediaType.APPLICATION_JSON)
                         .header("X-AUTH-TOKEN", token)
@@ -90,15 +89,13 @@ public class BoardTest {
 
     @Test
     @DisplayName("글 삭제")
-    @Rollback
     void boardDelete() throws Exception {
         //given
-        BoardInsertDto boardInsertDto = new BoardInsertDto("타이틀", "콘텐트");
-        String body = objectMapper.writeValueAsString(boardInsertDto);
+
+
         //when
         ResultActions result = mockMvc.perform(
-                MockMvcRequestBuilders.delete("/board")
-                        .content(body)
+                MockMvcRequestBuilders.delete("/board/"+boardNo)
                         .contentType(MediaType.APPLICATION_JSON)
                         .header("X-AUTH-TOKEN", token)
         );

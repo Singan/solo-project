@@ -43,19 +43,20 @@ public class BoardController {
         return boardService.boardDetail(boardNo);
     }
 
-    @DeleteMapping
-    public void boardDelete(@RequestParam Long boardNo, @AuthenticationPrincipal UserDetailsDto userDetailsDto) {
+    @DeleteMapping("/{boardNo}")
+    public void boardDelete(@PathVariable Long boardNo, @AuthenticationPrincipal UserDetailsDto userDetailsDto) throws Exception {
 
         boardService.boardDelete(boardNo, userDetailsDto);
     }
 
-    @PutMapping
+    @PutMapping("/{boardNo}")
     public ResponseEntity boardUpdate(@RequestBody BoardUpdateDto boardUpdateDto,
-                            @AuthenticationPrincipal UserDetailsDto userDetailsDto)  {
+                            @AuthenticationPrincipal UserDetailsDto userDetailsDto,@PathVariable Long boardNo)  {
         try {
-            boardService.boardUpdate(boardUpdateDto, userDetailsDto);
+            System.out.println("오나?");
+            boardService.boardUpdate(boardUpdateDto, userDetailsDto,boardNo);
 
-            return ResponseEntity.accepted().build();
+            return ResponseEntity.ok().build();
         } catch (AuthenticationException e) {
             return ResponseEntity.notFound().build();
         }
