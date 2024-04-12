@@ -20,20 +20,20 @@ public class UserService {
     private final JwtProvider jwtProvider;
     @Transactional
     public void userJoin(UserJoinDto userJoinDto){
-        if(userExist(userJoinDto.id())){
+        if(userExist(userJoinDto.getId())){
             throw new IllegalStateException("중복된 계정입니다.");
         };
+        userJoinDto.setPw(passwordEncoder.encode(userJoinDto.getPw()));
 
 
-
-        userRepository.save(userJoinDto.getUser(passwordEncoder));
+        userRepository.save(userJoinDto.getUser());
     }
 
     private boolean userExist(String id){
         return userRepository.existsUserById(id);
     }
     public String userLogin(UserLoginDto userLoginDto){
-        return jwtProvider.createToken(userRepository.findUserById(userLoginDto.id()));
+        return jwtProvider.createToken(userRepository.findUserById(userLoginDto.getId()));
 
     }
 }
