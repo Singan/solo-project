@@ -2,14 +2,21 @@ package com.my.user.vo;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
-import org.springframework.security.crypto.password.PasswordEncoder;
 
-public record UserJoinDto(String id,String pw, String name, String type) {
+@Data
+@AllArgsConstructor
+public class UserJoinDto {
 
-    public User getUser(PasswordEncoder passwordEncoder){
+    private String id;
+    private String pw;
+
+    private String name;
+    private String type;
+
+    public User getUser(){
         User user = User.builder()
                 .id(id)
-                .pw(passwordEncoder.encode(pw))
+                .pw(pw)
                 .type(type)
                 .name(name)
                 .build();
