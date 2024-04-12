@@ -4,6 +4,8 @@ import com.my.aop.LogClass;
 import com.my.board.vo.*;
 import com.my.user.vo.UserDetailsDto;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.java.Log;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.web.PageableDefault;
@@ -12,6 +14,7 @@ import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
 import javax.security.sasl.AuthenticationException;
+import java.util.List;
 
 @RestController
 @RequestMapping("/board")
@@ -23,40 +26,36 @@ public class BoardController {
 
 
     @PostMapping
-    public ResponseEntity boardInsert(@RequestBody BoardInsertDto boardInsertDto, @AuthenticationPrincipal UserDetailsDto userDetailsDto) {
-        return ResponseEntity.ok("boardNo:" + boardService.boardInsert(boardInsertDto, userDetailsDto));
+    public Long boardInsert(@RequestBody BoardInsertDto boardInsertDto, @AuthenticationPrincipal UserDetailsDto userDetailsDto) {
+        return boardService.boardInsert(boardInsertDto, userDetailsDto);
     }
 
-    @GetMapping()
-    public ResponseEntity boardList(
+    @GetMapping("/list")
+    public ListResult boardList(
             @PageableDefault(size = 2, sort = "id", direction = Sort.Direction.DESC)
             Pageable pageable
     ) {
-        return ResponseEntity.ok(boardService.boardList(pageable));
+        return boardService.boardList(pageable);
     }
 
-    @GetMapping("/{boardNo}")
-    public ResponseEntity boardDetail(@PathVariable Long boardNo) {
-        return ResponseEntity.ok(boardService.boardDetail(boardNo));
+    @GetMapping("/detail/{boardNo}")
+    public BoardViewDto boardDetail(@PathVariable Long boardNo) {
+        return boardService.boardDetail(boardNo);
     }
 
-    @DeleteMapping("/{boardNo}")
-    public ResponseEntity boardDelete(@PathVariable Long boardNo, @AuthenticationPrincipal UserDetailsDto userDetailsDto) throws Exception {
-        try {
-            boardService.boardDelete(boardNo, userDetailsDto);
-            return ResponseEntity.ok().build();
-        }catch (Exception e){
-            return ResponseEntity.notFound().build();
-        }
+    @DeleteMapping
+    public void boardDelete(@RequestParam Long boardNo, @AuthenticationPrincipal UserDetailsDto userDetailsDto) {
+
+        boardService.boardDelete(boardNo, userDetailsDto);
     }
 
-    @PutMapping("/{boardNo}")
+    @PutMapping
     public ResponseEntity boardUpdate(@RequestBody BoardUpdateDto boardUpdateDto,
-                                      @AuthenticationPrincipal UserDetailsDto userDetailsDto, @PathVariable Long boardNo) {
+                            @AuthenticationPrincipal UserDetailsDto userDetailsDto)  {
         try {
-            boardService.boardUpdate(boardUpdateDto, userDetailsDto, boardNo);
+            boardService.boardUpdate(boardUpdateDto, userDetailsDto);
 
-            return ResponseEntity.ok().build();
+            return ResponseEntity.accepted().build();
         } catch (AuthenticationException e) {
             return ResponseEntity.notFound().build();
         }

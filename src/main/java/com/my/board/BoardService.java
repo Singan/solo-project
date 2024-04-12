@@ -51,17 +51,13 @@ public class BoardService {
     }
 
     @Transactional
-    public void boardDelete(Long boardNo, UserDetailsDto userDetailsDto) throws Exception {
+    public void boardDelete(Long boardNo, UserDetailsDto userDetailsDto) {
 
-        Board board = boardFindOneWithReply(boardNo);
-        if( board.getWriter().getNo() != userDetailsDto.getNo()){
-            throw new RuntimeException("불일치한 사용자입니다.");
-        }
-        boardRepository.deleteById(board.getId());
+        boardRepository.deleteByIdAndWriter(boardNo, User.builder().no(userDetailsDto.getNo()).build());
     }
     @Transactional
-    public Long boardUpdate(BoardUpdateDto boardUpdateDto,UserDetailsDto userDetailsDto,Long boardNo) throws AuthenticationException {
-        Board board = boardFindOneWithReply(boardNo);
+    public Long boardUpdate(BoardUpdateDto boardUpdateDto,UserDetailsDto userDetailsDto) throws AuthenticationException {
+        Board board = boardFindOneWithReply(boardUpdateDto.no());
         if(!authCheck(board,userDetailsDto)){
             throw new AuthenticationException("수정 권한이 없습니다.");
         }

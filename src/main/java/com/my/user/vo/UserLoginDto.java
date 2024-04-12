@@ -2,7 +2,8 @@ package com.my.user.vo;
 
 import lombok.Data;
 
-
-public record UserLoginDto(String id,String pw) {
-
+@Data
+public class UserLoginDto {
+    private final String id;
+    private final String pw;
 }
