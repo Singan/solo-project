@@ -6,7 +6,6 @@ import io.micrometer.core.instrument.MeterRegistry;
 import io.micrometer.core.instrument.Timer;
 import io.micrometer.core.instrument.internal.DefaultGauge;
 import io.micrometer.prometheus.PrometheusMeterRegistry;
-import io.prometheus.client.CollectorRegistry;
 import io.prometheus.client.GaugeMetricFamily;
 import io.prometheus.client.Summary;
 import lombok.RequiredArgsConstructor;
@@ -17,15 +16,13 @@ import org.aspectj.lang.annotation.Aspect;
 import org.aspectj.lang.annotation.Pointcut;
 import org.springframework.stereotype.Component;
 
-import java.util.Iterator;
-
 @Slf4j
 @Aspect
 @Component
 @RequiredArgsConstructor
 public class LogTrace {
     private final PrometheusMeterRegistry meterRegistry;
-    private final CollectorRegistry collectorRegistry;
+    private GaugeMetricFamily gaugeMetricFamily = new GaugeMetricFamily("게이지", "메트릭", 100.0);
 
     @Pointcut("@within(com.my.aop.LogClass)")
     public void apiCounter() {
@@ -59,17 +56,7 @@ public class LogTrace {
         }
         long endMills = System.currentTimeMillis() - startMills;
         log.info("{} 메서드 실행 소요 시간 : {}", joinPoint.getSignature(), endMills);
-
-        Iterator it = collectorRegistry.metricFamilySamples().asIterator();
-        while (it.hasNext()){
-            log.info("테스트 : {} " , it.next().toString());
-        }
-
-
         return result;
-
-
-
     }
 
 }
