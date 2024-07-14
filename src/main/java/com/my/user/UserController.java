@@ -1,5 +1,6 @@
 package com.my.user;
 
+import com.my.aop.LogClass;
 import com.my.user.vo.User;
 import com.my.user.vo.UserJoinDto;
 import com.my.user.vo.UserLoginDto;
@@ -9,6 +10,7 @@ import org.springframework.web.bind.annotation.*;
 @RestController
 @RequestMapping("/user")
 @RequiredArgsConstructor
+@LogClass
 public class UserController {
 
 

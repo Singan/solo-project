@@ -25,13 +25,14 @@ public interface BoardRepository extends JpaRepository<Board, Long> {
 
 
     @Query("select distinct b from Board b " +
-            " join fetch b.replyList reply  " +
-            " join fetch b.writer wr " +
-            " join fetch reply.writer rwr " +
+            "left join fetch b.replyList reply  " +
+            "left join fetch b.writer wr " +
+            "left join fetch reply.writer rwr " +
             "where b.id = :no ")
     Optional<Board> findByIdWithAndReplyList(@Param("no") Long no);
 
-    @Modifying
-    void deleteByIdAndWriter(@Param("no")Long no, @Param("writer") User writer);
+//    @Modifying
+//    @EntityGraph(attributePaths = {"replyList"})
+//    Board deleteById(@Param("no")Long no);
 
 }

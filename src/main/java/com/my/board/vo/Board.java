@@ -24,7 +24,7 @@ public class Board {
     @ManyToOne(fetch = FetchType.LAZY)
     private User writer;
 
-    @OneToMany(mappedBy = "board")
+    @OneToMany(mappedBy = "board",cascade = CascadeType.ALL)
     @BatchSize(size = 2)
     private List<Reply> replyList = new ArrayList<>();
 

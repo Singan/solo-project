@@ -26,7 +26,6 @@ import java.util.Collections;
 @RequiredArgsConstructor
 @Configuration
 @EnableWebSecurity
-@LogClass
 public class MySecurity {
     private final JwtAuthFilter jwtAuthFilter;
     @Bean
@@ -42,7 +41,15 @@ public class MySecurity {
                         }
                 )).authorizeHttpRequests((requests) -> requests
                         .requestMatchers(HttpMethod.POST,"/user", "/user/login").permitAll()
-                        .requestMatchers(HttpMethod.GET,"/board/list","/user/test" , "/board/detail/**").permitAll()
+                        .requestMatchers(HttpMethod.GET,
+                                "/board",
+                                "/metrics/**",
+                                "/user/test" ,
+                                "/board/**",
+                                "/actuator/**",
+                                "/actuator/prometheus/**").permitAll()
+
+
                         .anyRequest().authenticated()
                 )
                 .csrf(AbstractHttpConfigurer::disable).httpBasic(HttpBasicConfigurer::disable)
