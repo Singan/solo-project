@@ -5,8 +5,6 @@ import com.my.user.vo.UserDetailsDto;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 
-import java.time.LocalDateTime;
-
 public record BoardInsertDto(String title,String content) {
 
     public Board createBoard(UserDetailsDto userDetailsDto) {
@@ -16,7 +14,6 @@ public record BoardInsertDto(String title,String content) {
                 content(this.content).
                 title(this.title).
                 writer(no).
-                dateTime(LocalDateTime.now()).
                 build();
 
         return board;

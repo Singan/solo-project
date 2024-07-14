@@ -3,26 +3,20 @@ package com.my.board;
 import com.my.aop.LogClass;
 import com.my.board.vo.*;
 import com.my.user.vo.UserDetailsDto;
-import io.micrometer.core.annotation.Counted;
-import io.micrometer.core.annotation.Timed;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.web.PageableDefault;
 import org.springframework.http.ResponseEntity;
-import org.springframework.scheduling.annotation.Async;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
 import javax.security.sasl.AuthenticationException;
-import java.util.concurrent.CompletableFuture;
-import java.util.concurrent.Future;
 
 @RestController
 @RequestMapping("/board")
 @RequiredArgsConstructor
 @LogClass
-@Timed("board")
 public class BoardController {
 
     private final BoardService boardService;
@@ -33,18 +27,16 @@ public class BoardController {
         return ResponseEntity.ok("boardNo:" + boardService.boardInsert(boardInsertDto, userDetailsDto));
     }
 
-    @GetMapping
-    @Async
-    public CompletableFuture<ResponseEntity> boardList(
-            @PageableDefault(size = 10, sort = "id", direction = Sort.Direction.DESC)
+    @GetMapping()
+    public ResponseEntity boardList(
+            @PageableDefault(size = 2, sort = "id", direction = Sort.Direction.DESC)
             Pageable pageable
     ) {
-
-        return CompletableFuture.completedFuture(ResponseEntity.ok(boardService.boardList(pageable)));
+        return ResponseEntity.ok(boardService.boardList(pageable));
     }
 
     @GetMapping("/{boardNo}")
-    public ResponseEntity boardDetail(@PathVariable("boardNo") Long boardNo) {
+    public ResponseEntity boardDetail(@PathVariable Long boardNo) {
         return ResponseEntity.ok(boardService.boardDetail(boardNo));
     }
 

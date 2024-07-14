@@ -11,7 +11,6 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.boot.autoconfigure.data.web.SpringDataWebProperties;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
-import org.springframework.scheduling.annotation.Async;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Service;
@@ -19,7 +18,6 @@ import org.springframework.transaction.annotation.Transactional;
 
 import javax.security.sasl.AuthenticationException;
 import java.util.List;
-import java.util.concurrent.CompletableFuture;
 
 @Service
 @RequiredArgsConstructor
@@ -33,10 +31,10 @@ public class BoardService {
     public Long boardInsert(BoardInsertDto boardDto, UserDetailsDto userDetailsDto) {
         return boardRepository.save(boardDto.createBoard(userDetailsDto)).getId();
     }
-    @Async
-    public CompletableFuture<ListResult> boardList(Pageable pageable) {
+
+    public ListResult boardList(Pageable pageable) {
         Page<BoardListViewDto> boardList = boardRepository.findPageableList(pageable);
-        return CompletableFuture.completedFuture(new ListResult(boardList.getNumber(), boardList.toList()));
+        return new ListResult(boardList.getNumber(), boardList.toList());
     }
 
     public BoardViewDto boardDetail(Long boardNo) {
