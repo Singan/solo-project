@@ -21,7 +21,6 @@ import java.util.List;
 
 @Service
 @RequiredArgsConstructor
-@LogClass
 @Transactional(readOnly = true)
 public class BoardService {
 

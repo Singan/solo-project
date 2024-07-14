@@ -2,7 +2,22 @@ management:
   endpoints:
     web:
       exposure:
-        include: prometheus, health, info
+        include: "*"
+
   metrics:
     tags:
-      application: ${spring.application.name}
+      application: my-project
+
+server:
+  tomcat:
+    mbeanregistry:
+      enabled: true
+
+spring:
+  task:
+    execution:
+      pool:
+        core-size: 500
+        max-size: 500
+        queue-capacity: 200
+        keep-alive: 30s

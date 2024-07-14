@@ -12,7 +12,6 @@ import org.springframework.transaction.annotation.Transactional;
 
 @Service
 @RequiredArgsConstructor
-@LogClass
 @Transactional(readOnly = true)
 public class ReplyService {
     private final ReplyRepository replyRepository;
