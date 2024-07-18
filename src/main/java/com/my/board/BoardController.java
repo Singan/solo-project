@@ -7,6 +7,7 @@ import io.micrometer.core.annotation.Counted;
 import io.micrometer.core.annotation.Timed;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Slice;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.web.PageableDefault;
 import org.springframework.http.ResponseEntity;
@@ -16,6 +17,7 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.security.sasl.AuthenticationException;
 import java.util.concurrent.CompletableFuture;
+import java.util.concurrent.ExecutionException;
 import java.util.concurrent.Future;
 
 @RestController
@@ -33,14 +35,20 @@ public class BoardController {
         return ResponseEntity.ok("boardNo:" + boardService.boardInsert(boardInsertDto, userDetailsDto));
     }
 
+    //    @GetMapping
+//    public ResponseEntity boardList(
+//            @PageableDefault(size = 10, sort = "id", direction = Sort.Direction.DESC)
+//            Pageable pageable
+//    ) throws ExecutionException, InterruptedException {
+//
+//        return ResponseEntity.ok(boardService.boardList(pageable));
+//    }
     @GetMapping
-    @Async
-    public CompletableFuture<ResponseEntity> boardList(
+    public ResponseEntity boardList(
             @PageableDefault(size = 10, sort = "id", direction = Sort.Direction.DESC)
             Pageable pageable
-    ) {
-
-        return CompletableFuture.completedFuture(ResponseEntity.ok(boardService.boardList(pageable)));
+    ) throws ExecutionException, InterruptedException {
+        return ResponseEntity.ok(boardService.boardList(pageable));
     }
 
     @GetMapping("/{boardNo}")
@@ -53,7 +61,7 @@ public class BoardController {
         try {
             boardService.boardDelete(boardNo, userDetailsDto);
             return ResponseEntity.ok().build();
-        }catch (Exception e){
+        } catch (Exception e) {
             return ResponseEntity.notFound().build();
         }
     }
