@@ -35,14 +35,6 @@ public class BoardController {
         return ResponseEntity.ok("boardNo:" + boardService.boardInsert(boardInsertDto, userDetailsDto));
     }
 
-    //    @GetMapping
-//    public ResponseEntity boardList(
-//            @PageableDefault(size = 10, sort = "id", direction = Sort.Direction.DESC)
-//            Pageable pageable
-//    ) throws ExecutionException, InterruptedException {
-//
-//        return ResponseEntity.ok(boardService.boardList(pageable));
-//    }
     @GetMapping
     public ResponseEntity boardList(
             @PageableDefault(size = 10, sort = "id", direction = Sort.Direction.DESC)
