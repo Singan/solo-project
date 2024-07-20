@@ -5,6 +5,7 @@ import com.my.board.vo.*;
 import com.my.user.vo.UserDetailsDto;
 import io.micrometer.core.annotation.Counted;
 import io.micrometer.core.annotation.Timed;
+import io.swagger.v3.oas.annotations.Operation;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
@@ -35,6 +36,7 @@ public class BoardController {
 
     @GetMapping
     @Async
+    @Operation
     public CompletableFuture<ResponseEntity> boardList(
             @PageableDefault(size = 10, sort = "id", direction = Sort.Direction.DESC)
             Pageable pageable
