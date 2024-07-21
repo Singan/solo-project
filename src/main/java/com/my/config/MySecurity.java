@@ -49,7 +49,8 @@ public class MySecurity {
                                 "/board/**",
                                 "/actuator/**",
                                 "/actuator/prometheus/**",
-                                "/swagger-ui/**"
+                                "/swagger-ui/**",
+                                "/v3/api-docs/swagger-config"
                         ).permitAll()
 
 
