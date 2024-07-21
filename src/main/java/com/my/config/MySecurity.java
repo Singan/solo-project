@@ -50,7 +50,7 @@ public class MySecurity {
                                 "/actuator/**",
                                 "/actuator/prometheus/**",
                                 "/swagger-ui/**",
-                                "/v3/api-docs/swagger-config"
+                                "/v3/api-docs/**"
                         ).permitAll()
 
 
