@@ -30,6 +30,7 @@ import java.util.Collections;
 @EnableWebSecurity
 public class MySecurity {
     private final JwtAuthFilter jwtAuthFilter;
+
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
         http.cors(corsCustomizer -> corsCustomizer.configurationSource(request -> {
@@ -48,8 +49,10 @@ public class MySecurity {
                                 "/user/test",
                                 "/board/**",
                                 "/actuator/**",
-                                "/actuator/prometheus/**").permitAll()
-
+                                "/actuator/prometheus/**",
+                                "/swagger-ui/**",
+                                "/v3/api-docs/**"
+                        ).permitAll()
 
                         .anyRequest().authenticated()
                 )
@@ -57,7 +60,6 @@ public class MySecurity {
                 .exceptionHandling(exceptionConfig -> exceptionConfig
                         .authenticationEntryPoint(new JwtAuthenticationEntryPoint())
                         .accessDeniedHandler(new JwtAccessDeniedHandler()))
-
                 .addFilterBefore(jwtAuthFilter, UsernamePasswordAuthenticationFilter.class);
 
         return http.build();
