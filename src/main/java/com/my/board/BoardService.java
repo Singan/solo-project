@@ -96,13 +96,8 @@ public class BoardService {
     public void boardDelete(Long boardNo, UserDetailsDto userDetailsDto) throws Exception {
 
         Board board = boardFindOneWithReply(boardNo);
-<<<<<<< HEAD
-        if( board.getWriter().getNo() != userDetailsDto.getNo()){
-            throw new NoSuchElementException("불일치한 사용자입니다.");
-=======
         if (board.getWriter().getNo() != userDetailsDto.getNo()) {
             throw new RuntimeException("불일치한 사용자입니다.");
->>>>>>> develop
         }
         boardRepository.deleteById(board.getId());
     }
