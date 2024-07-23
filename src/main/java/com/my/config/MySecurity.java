@@ -32,7 +32,6 @@ public class MySecurity {
     private final JwtAuthFilter jwtAuthFilter;
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
-
         http.cors(corsCustomizer -> corsCustomizer.configurationSource(request -> {
                             CorsConfiguration config = new CorsConfiguration();
                             config.setAllowedOrigins(Collections.singletonList("*"));
@@ -42,11 +41,11 @@ public class MySecurity {
                             return config;
                         }
                 )).authorizeHttpRequests((requests) -> requests
-                        .requestMatchers(HttpMethod.POST,"/user", "/user/login").permitAll()
+                        .requestMatchers(HttpMethod.POST, "/user", "/user/login").permitAll()
                         .requestMatchers(HttpMethod.GET,
                                 "/board",
                                 "/metrics/**",
-                                "/user/test" ,
+                                "/user/test",
                                 "/board/**",
                                 "/actuator/**",
 
@@ -58,13 +57,14 @@ public class MySecurity {
                 )
                 .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .csrf(AbstractHttpConfigurer::disable).httpBasic(HttpBasicConfigurer::disable)
-                .exceptionHandling(
-                        (exceptionConfig) ->
-                        exceptionConfig.authenticationEntryPoint(new JwtAuthenticationEntryPoint())
-                                .accessDeniedHandler(new JwtAccessDeniedHandler())
-                ).addFilterBefore(jwtAuthFilter, UsernamePasswordAuthenticationFilter.class);
+                .exceptionHandling(exceptionConfig -> exceptionConfig
+                        .authenticationEntryPoint(new JwtAuthenticationEntryPoint())
+                        .accessDeniedHandler(new JwtAccessDeniedHandler()))
+
+                .addFilterBefore(jwtAuthFilter, UsernamePasswordAuthenticationFilter.class);
         return http.build();
     }
+
     @Bean
     public PasswordEncoder passwordEncoder() {
         return new BCryptPasswordEncoder();

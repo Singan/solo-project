@@ -19,6 +19,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import javax.security.sasl.AuthenticationException;
 import java.util.List;
+import java.util.NoSuchElementException;
 import java.util.concurrent.CompletableFuture;
 
 @Service
@@ -56,7 +57,7 @@ public class BoardService {
 
         Board board = boardFindOneWithReply(boardNo);
         if( board.getWriter().getNo() != userDetailsDto.getNo()){
-            throw new RuntimeException("불일치한 사용자입니다.");
+            throw new NoSuchElementException("불일치한 사용자입니다.");
         }
         boardRepository.deleteById(board.getId());
     }
