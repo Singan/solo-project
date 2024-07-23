@@ -48,21 +48,20 @@ public class MySecurity {
                                 "/user/test",
                                 "/board/**",
                                 "/actuator/**",
+                                "/actuator/prometheus/**").permitAll()
 
-                                "/actuator/prometheus/**",
-                                "/swagger-ui/**",
-                                "/v3/api-docs/**"
-                        ).permitAll()
+
                         .anyRequest().authenticated()
                 )
-                .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .csrf(AbstractHttpConfigurer::disable).httpBasic(HttpBasicConfigurer::disable)
                 .exceptionHandling(exceptionConfig -> exceptionConfig
                         .authenticationEntryPoint(new JwtAuthenticationEntryPoint())
                         .accessDeniedHandler(new JwtAccessDeniedHandler()))
 
                 .addFilterBefore(jwtAuthFilter, UsernamePasswordAuthenticationFilter.class);
+
         return http.build();
+
     }
 
     @Bean
