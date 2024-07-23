@@ -53,7 +53,6 @@ public class MySecurity {
                                 "/v3/api-docs/**"
                         ).permitAll()
 
-
                         .anyRequest().authenticated()
                 )
                 .csrf(AbstractHttpConfigurer::disable).httpBasic(HttpBasicConfigurer::disable)
