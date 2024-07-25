@@ -22,19 +22,18 @@ public class SwaggerConfig {
     @Bean
     @Profile("!Prod")
     public OpenAPI openAPI() {
-        String jwtSchemeName = "JWT 토큰";
-        SecurityRequirement securityRequirement = new SecurityRequirement().addList(jwtSchemeName);
+        String authSchemeName = "X-AUTH-TOKEN";
+        SecurityRequirement securityRequirement = new SecurityRequirement().addList(authSchemeName);
 
         Components components = new Components()
-                .addSecuritySchemes(jwtSchemeName, new SecurityScheme()
-                        .name(jwtSchemeName)
-                        .type(SecurityScheme.Type.HTTP)
-                        .scheme("Bearer")
-                        .bearerFormat("JWT"));
+                .addSecuritySchemes(authSchemeName, new SecurityScheme()
+                        .name(authSchemeName)
+                        .type(SecurityScheme.Type.APIKEY)  // API Key 타입을 사용합니다.
+                        .in(SecurityScheme.In.HEADER)      // 헤더에 포함됩니다.
+                        .name(authSchemeName));             // 헤더 이름을 X-AUTH-TOKEN으로 설정합니다.
 
         return new OpenAPI()
                 .addSecurityItem(securityRequirement)
                 .components(components);
     }
-
 }

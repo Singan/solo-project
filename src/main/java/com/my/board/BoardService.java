@@ -1,11 +1,15 @@
 package com.my.board;
 
 import com.my.aop.LogClass;
+import com.my.board.exception.BoardErrorCode;
+import com.my.board.exception.BoardException;
 import com.my.board.vo.*;
 import com.my.config.PagingUtils;
 import com.my.reply.vo.Reply;
 import com.my.reply.vo.ReplyListDto;
 import com.my.reply.vo.ReplyViewDto;
+import com.my.user.exception.UserErrorCode;
+import com.my.user.exception.UserException;
 import com.my.user.vo.User;
 import com.my.user.vo.UserDetailsDto;
 import lombok.RequiredArgsConstructor;
@@ -50,7 +54,7 @@ public class BoardService {
         Slice<BoardListViewDto> boardList = boardRepository.findPageableList(pageable);
 
         if (boardList.getSize() == 0)
-            throw new NoSuchElementException("없는 게시글 번호 입니다.");
+            throw new BoardException(BoardErrorCode.BOARD_NOT_FOUND);
         return pagination(boardList.getContent(), pageable);
     }
 
@@ -65,7 +69,7 @@ public class BoardService {
         try {
             lastBoard = boardList.getLast();
         } catch (NoSuchElementException e) {
-            throw new NoSuchElementException("없는 게시글입니다.");
+            throw new BoardException(BoardErrorCode.BOARD_NOT_FOUND);
         }
 
 
@@ -96,8 +100,8 @@ public class BoardService {
     public void boardDelete(Long boardNo, UserDetailsDto userDetailsDto) throws Exception {
 
         Board board = boardFindOneWithReply(boardNo);
-        if (board.getWriter().getNo() != userDetailsDto.getNo()) {
-            throw new RuntimeException("불일치한 사용자입니다.");
+        if (!authCheck(board,userDetailsDto)) {
+            throw new UserException(UserErrorCode.USER_ACCESS_DENIED);
         }
         boardRepository.deleteById(board.getId());
     }
@@ -106,7 +110,7 @@ public class BoardService {
     public Long boardUpdate(BoardUpdateDto boardUpdateDto, UserDetailsDto userDetailsDto, Long boardNo) throws AuthenticationException {
         Board board = boardFindOneWithReply(boardNo);
         if (!authCheck(board, userDetailsDto)) {
-            throw new AuthenticationException("수정 권한이 없습니다.");
+            throw new UserException(UserErrorCode.USER_ACCESS_DENIED);
         }
 
         board.boardUpdate(boardUpdateDto.title(), boardUpdateDto.content());
@@ -121,12 +125,12 @@ public class BoardService {
     }
 
     private Board boardFindOne(Long boardNo) {
-        Board board = boardRepository.findById(boardNo).orElseThrow(() -> new RuntimeException("없는 글입니다."));
+        Board board = boardRepository.findById(boardNo).orElseThrow(() -> new BoardException(BoardErrorCode.BOARD_NOT_FOUND));
         return board;
     }
 
     private Board boardFindOneWithReply(Long boardNo) {
-        Board board = boardRepository.findByIdWithAndReplyList(boardNo).orElseThrow(() -> new RuntimeException("없는 글입니다."));
+        Board board = boardRepository.findByIdWithAndReplyList(boardNo).orElseThrow(() ->  new BoardException(BoardErrorCode.BOARD_NOT_FOUND));
         return board;
     }
 }

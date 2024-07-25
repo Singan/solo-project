@@ -52,17 +52,12 @@ public class JwtProvider {
         if (token == null || token.isBlank())
             return false;
         try {
-            Claims claims = getClaimsFormToken(token);
-            if (null != claims) {
-                return true;
-            }
-            return false;
+            Claims claims = getClaimsFromToken(token);
+            return claims != null;
         } catch (ExpiredJwtException exception) {
             throw new JwtException("토큰 만료");
         } catch (JwtException exception) {
             throw new JwtException("Token Tampered");
-        } catch (NullPointerException exception) {
-            throw new JwtException("토큰이 존재하지 않습니다.");
         }
     }
 
@@ -89,14 +84,14 @@ public class JwtProvider {
         return claims;
     }
 
-    private Claims getClaimsFormToken(final String token) {
+    private Claims getClaimsFromToken(final String token) {
 
         return Jwts.parser().setSigningKey(key)
                 .parseClaimsJws(token).getBody();
     }
 
     public User getTokenConvertUser (final String token) { // 토큰을 유저 객체로 바꾸어준다.
-        Claims claims = getClaimsFormToken(token);
+        Claims claims = getClaimsFromToken(token);
         String type = claims.get("userType").toString();
         Long no = Long.parseLong(claims.get("userNo").toString());
         String name = claims.get("userName").toString();

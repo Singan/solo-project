@@ -1,7 +1,9 @@
 package com.my.config;
 
 import com.my.aop.LogClass;
+import com.my.config.jwt.JwtAccessDeniedHandler;
 import com.my.config.jwt.JwtAuthFilter;
+import com.my.config.jwt.JwtAuthenticationEntryPoint;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
@@ -31,7 +33,6 @@ public class MySecurity {
 
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
-
         http.cors(corsCustomizer -> corsCustomizer.configurationSource(request -> {
                             CorsConfiguration config = new CorsConfiguration();
                             config.setAllowedOrigins(Collections.singletonList("*"));
@@ -56,7 +57,11 @@ public class MySecurity {
                         .anyRequest().authenticated()
                 )
                 .csrf(AbstractHttpConfigurer::disable).httpBasic(HttpBasicConfigurer::disable)
+                .exceptionHandling(exceptionConfig -> exceptionConfig
+                        .authenticationEntryPoint(new JwtAuthenticationEntryPoint())
+                        .accessDeniedHandler(new JwtAccessDeniedHandler()))
                 .addFilterBefore(jwtAuthFilter, UsernamePasswordAuthenticationFilter.class);
+
         return http.build();
 
     }
