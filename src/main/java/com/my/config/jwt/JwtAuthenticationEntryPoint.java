@@ -18,7 +18,6 @@ import java.util.Map;
 
 @Slf4j
 @Component
-
 public class JwtAuthenticationEntryPoint implements AuthenticationEntryPoint {
 
     @Override

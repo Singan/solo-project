@@ -2,6 +2,8 @@ package com.my.user;
 
 import com.my.aop.LogClass;
 
+import com.my.config.exception.ErrorResponse;
+import com.my.config.exception.GlobalException;
 import com.my.user.vo.UserJoinDto;
 import com.my.user.vo.UserLoginDto;
 import io.swagger.v3.oas.annotations.Operation;
@@ -14,7 +16,6 @@ import lombok.RequiredArgsConstructor;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.ErrorResponse;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
@@ -108,11 +109,8 @@ public class UserController {
             }
     )
     public ResponseEntity userLogin(@RequestBody UserLoginDto userLoginDto) {
-        try {
             return ResponseEntity.ok().body("token:" + userService.userLogin(userLoginDto));
-        } catch (Exception e) {
-            return ResponseEntity.badRequest().body(e.getMessage());
-        }
+
 
     }
 }

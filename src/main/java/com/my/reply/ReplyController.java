@@ -1,4 +1,5 @@
 package com.my.reply;
+import com.my.config.exception.ErrorResponse;
 import com.my.reply.vo.ReplyInsertDto;
 import com.my.reply.vo.ReplyUpdateDto;
 import com.my.user.vo.UserDetailsDto;
@@ -10,7 +11,6 @@ import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
-import org.springframework.web.ErrorResponse;
 import org.springframework.web.bind.annotation.*;
 
 @RestController

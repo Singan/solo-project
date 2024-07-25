@@ -41,13 +41,6 @@ public class BoardService {
     public Long boardInsert(BoardInsertDto boardDto, UserDetailsDto userDetailsDto) {
         return boardRepository.save(boardDto.createBoard(userDetailsDto)).getId();
     }
-//    @Async
-//    public CompletableFuture<ListResult> boardList(Pageable pageable) {
-//        Page<BoardListViewDto> boardList = boardRepository.findPageableList(pageable);
-//
-//        return CompletableFuture.completedFuture(new ListResult(boardList.getNumber(), boardList.toList()));
-//    }
-
     public ListResult boardList(Pageable pageable) {
 
 
@@ -68,7 +61,7 @@ public class BoardService {
 
         try {
             lastBoard = boardList.getLast();
-        } catch (NoSuchElementException e) {
+        } catch (Exception e) {
             throw new BoardException(BoardErrorCode.BOARD_NOT_FOUND);
         }
 

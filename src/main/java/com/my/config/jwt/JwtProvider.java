@@ -55,9 +55,9 @@ public class JwtProvider {
             Claims claims = getClaimsFromToken(token);
             return claims != null;
         } catch (ExpiredJwtException exception) {
-            throw new JwtException("토큰 만료");
+            return false;
         } catch (JwtException exception) {
-            throw new JwtException("Token Tampered");
+            return false;
         }
     }
 
