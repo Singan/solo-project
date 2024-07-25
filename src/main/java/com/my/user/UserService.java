@@ -26,7 +26,7 @@ public class UserService {
         if (userExist(userJoinDto.id())) {
             throw new Exception("중복된 계정입니다.");
         }
-        ;
+
 
 
         userRepository.save(userJoinDto.getUser(passwordEncoder));
@@ -36,11 +36,19 @@ public class UserService {
         return userRepository.existsUserById(id);
     }
 
-    public String userLogin(UserLoginDto userLoginDto) throws RuntimeException {
-        User user = userRepository.findUserById(userLoginDto.id()).orElseThrow(() -> new RuntimeException("존재하지 않는 사용자 입니다."));
+    private boolean userPasswordCheck(String pw , String encodePw){
+        return passwordEncoder.matches(pw , encodePw );
+    }
 
-        if (!passwordEncoder.matches(userLoginDto.pw(), user.getPw())) {
-            throw new RuntimeException("비밀번호가 일치하지 않습니다.");
+    public String userLogin(UserLoginDto userLoginDto) {
+        try {
+            User user = userRepository.findUserById(userLoginDto.id());
+            if(userPasswordCheck(userLoginDto.pw() , user.getPw())){
+                throw new UserException(UserErrorCode.USER_NOT_FOUND);
+            }
+            return jwtProvider.createToken(user);
+        } catch (Exception e) {
+            throw new UserException(UserErrorCode.USER_NOT_FOUND);
         }
 
         return jwtProvider.createToken(user);
