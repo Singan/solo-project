@@ -1,6 +1,5 @@
 package com.my.user;
 
-import com.my.aop.LogClass;
 import com.my.config.jwt.JwtProvider;
 import com.my.user.exception.UserErrorCode;
 import com.my.user.exception.UserException;
@@ -12,6 +11,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+
 @Service
 @RequiredArgsConstructor
 @Transactional(readOnly = true)
@@ -20,13 +20,12 @@ public class UserService {
     private final PasswordEncoder passwordEncoder;
     private final JwtProvider jwtProvider;
 
+
     @Transactional
     public void userJoin(UserJoinDto userJoinDto) {
         if (userExist(userJoinDto.id())) {
             throw new IllegalStateException("중복된 계정입니다.");
         }
-        ;
-
 
         userRepository.save(userJoinDto.getUser(passwordEncoder));
     }
@@ -35,12 +34,23 @@ public class UserService {
         return userRepository.existsUserById(id);
     }
 
+
+    private boolean userPasswordCheck(String pw, String encodePw) {
+        return passwordEncoder.matches(pw, encodePw);
+    }
+
     public String userLogin(UserLoginDto userLoginDto) {
         try {
-            return jwtProvider.createToken(userRepository.findUserById(userLoginDto.id()));
+            User user = userRepository.findUserById(userLoginDto.id())
+                    .orElseThrow(() -> new UserException(UserErrorCode.USER_NOT_FOUND));
+            if (userPasswordCheck(userLoginDto.pw(), user.getPw())) {
+                throw new UserException(UserErrorCode.USER_NOT_FOUND);
+            }
+            return jwtProvider.createToken(user);
         } catch (Exception e) {
             throw new UserException(UserErrorCode.USER_NOT_FOUND);
         }
+
 
     }
 }

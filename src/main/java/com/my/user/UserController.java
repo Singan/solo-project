@@ -1,6 +1,7 @@
 package com.my.user;
 
 import com.my.aop.LogClass;
+
 import com.my.user.vo.UserJoinDto;
 import com.my.user.vo.UserLoginDto;
 import io.swagger.v3.oas.annotations.Operation;
@@ -10,6 +11,9 @@ import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
+
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.ErrorResponse;
 import org.springframework.web.bind.annotation.*;
 
@@ -54,9 +58,12 @@ public class UserController {
                     )
             }
     )
-    public void userJoin(@RequestBody UserJoinDto userJoinDto) {
+    public ResponseEntity userJoin(@RequestBody UserJoinDto userJoinDto) {
         userService.userJoin(userJoinDto);
+        return ResponseEntity.ok().body("성공적으로 회원가입 하였습니다.");
+
     }
+
 
     @PostMapping("/login")
     @Operation(
@@ -100,7 +107,12 @@ public class UserController {
                     )
             }
     )
-    public String userLogin(@RequestBody UserLoginDto userLoginDto) {
-        return userService.userLogin(userLoginDto);
+    public ResponseEntity userLogin(@RequestBody UserLoginDto userLoginDto) {
+        try {
+            return ResponseEntity.ok().body("token:" + userService.userLogin(userLoginDto));
+        } catch (Exception e) {
+            return ResponseEntity.badRequest().body(e.getMessage());
+        }
+
     }
 }
