@@ -21,12 +21,19 @@ public class GlobalExceptionHandler {
     }
 
 
-    @ExceptionHandler(Exception.class)
-    public ResponseEntity<Object> handleException(Exception e) {
-        return buildResponseEntity(HttpStatus.INTERNAL_SERVER_ERROR, e.getMessage());
+    @ExceptionHandler(GlobalException.class)
+    public ResponseEntity<Object> handleException(GlobalException e) {
+        return buildResponseEntity(HttpStatus.valueOf(e.getStatusCode()), e.getMessage() , e.getCode());
     }
 
-    private ResponseEntity<Object> buildResponseEntity(HttpStatus status, String message) {
+    private ResponseEntity<Object> buildResponseEntity(HttpStatus status ,  String message ,String code ) {
+        Map<String, String> errorDetails = new HashMap<>();
+        errorDetails.put("error", status.getReasonPhrase());
+        errorDetails.put("message", message);
+        errorDetails.put("errorCode", code);
+        return new ResponseEntity<>(errorDetails, status);
+    }
+    private ResponseEntity<Object> buildResponseEntity(HttpStatus status ,  String message  ) {
         Map<String, String> errorDetails = new HashMap<>();
         errorDetails.put("error", status.getReasonPhrase());
         errorDetails.put("message", message);

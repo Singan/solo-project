@@ -39,20 +39,17 @@ public class JwtAuthFilter extends OncePerRequestFilter {
             throws IOException, ServletException {
 
         String token = request.getHeader("X-AUTH-TOKEN");
-        try {
-            if (token != null && !token.isBlank()) {
-                if (jwtProvider.isValidToken(token)) {
-                    User user = jwtProvider.getTokenConvertUser(token);
-                    if (user != null) {
-                        SecurityContextHolder.getContext().setAuthentication(getAuthentication(user));
-                    }
+
+        if (token != null && !token.isBlank()) {
+            if (jwtProvider.isValidToken(token)) {
+                User user = jwtProvider.getTokenConvertUser(token);
+                if (user != null) {
+                    SecurityContextHolder.getContext().setAuthentication(getAuthentication(user));
                 }
             }
-
-        }catch (JwtException e){
-
-            //entryPoint.commence(request, response, new AuthenticationException(e.getMessage()) {});
         }
+
+
         chain.doFilter(request, response);
 
 

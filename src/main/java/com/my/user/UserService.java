@@ -2,6 +2,8 @@ package com.my.user;
 
 import com.my.aop.LogClass;
 import com.my.config.jwt.JwtProvider;
+import com.my.user.exception.UserErrorCode;
+import com.my.user.exception.UserException;
 import com.my.user.vo.User;
 import com.my.user.vo.UserJoinDto;
 import com.my.user.vo.UserLoginDto;
@@ -17,22 +19,28 @@ public class UserService {
     private final UserRepository userRepository;
     private final PasswordEncoder passwordEncoder;
     private final JwtProvider jwtProvider;
-    @Transactional
-    public void userJoin(UserJoinDto userJoinDto){
-        if(userExist(userJoinDto.id())){
-            throw new IllegalStateException("중복된 계정입니다.");
-        };
 
+    @Transactional
+    public void userJoin(UserJoinDto userJoinDto) {
+        if (userExist(userJoinDto.id())) {
+            throw new IllegalStateException("중복된 계정입니다.");
+        }
+        ;
 
 
         userRepository.save(userJoinDto.getUser(passwordEncoder));
     }
 
-    private boolean userExist(String id){
+    private boolean userExist(String id) {
         return userRepository.existsUserById(id);
     }
-    public String userLogin(UserLoginDto userLoginDto){
-        return jwtProvider.createToken(userRepository.findUserById(userLoginDto.id()));
+
+    public String userLogin(UserLoginDto userLoginDto) {
+        try {
+            return jwtProvider.createToken(userRepository.findUserById(userLoginDto.id()));
+        } catch (Exception e) {
+            throw new UserException(UserErrorCode.USER_NOT_FOUND);
+        }
 
     }
 }
