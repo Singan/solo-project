@@ -43,7 +43,7 @@ public class UserService {
         try {
             User user = userRepository.findUserById(userLoginDto.id())
                     .orElseThrow(() -> new UserException(UserErrorCode.USER_NOT_FOUND));
-            if (userPasswordCheck(userLoginDto.pw(), user.getPw())) {
+            if (!userPasswordCheck(userLoginDto.pw(), user.getPw())) {
                 throw new UserException(UserErrorCode.USER_NOT_FOUND);
             }
             return jwtProvider.createToken(user);

@@ -3,6 +3,8 @@ package com.my.board;
 import com.my.board.exception.BoardErrorCode;
 import com.my.board.exception.BoardException;
 import com.my.board.vo.*;
+import com.my.config.exception.ErrorResponse;
+import com.my.config.exception.GlobalException;
 import com.my.user.vo.UserDetailsDto;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
@@ -16,7 +18,6 @@ import org.springframework.data.domain.Sort;
 import org.springframework.data.web.PageableDefault;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
-import org.springframework.web.ErrorResponse;
 import org.springframework.web.bind.annotation.*;
 import javax.security.sasl.AuthenticationException;
 

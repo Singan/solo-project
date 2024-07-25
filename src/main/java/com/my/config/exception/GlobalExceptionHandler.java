@@ -23,7 +23,7 @@ public class GlobalExceptionHandler {
 
     @ExceptionHandler(GlobalException.class)
     public ResponseEntity<Object> handleException(GlobalException e) {
-        return buildResponseEntity(HttpStatus.valueOf(e.getStatusCode()), e.getMessage() , e.getCode());
+        return buildResponseEntity(HttpStatus.valueOf(e.getStatusCode()), e.getMessage() , e.getStatusCode() + "");
     }
 
     private ResponseEntity<Object> buildResponseEntity(HttpStatus status ,  String message ,String code ) {
