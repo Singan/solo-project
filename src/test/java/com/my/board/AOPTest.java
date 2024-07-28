@@ -27,13 +27,13 @@ public class AOPTest {
     @Autowired
     UserRepository userRepository;
     @BeforeEach
-    void init(){
+    void init() throws Exception {
         userService.userJoin(new UserJoinDto("id","pw","name","type"));
     }
     @Test
     void testBoardService(){
         boardService.boardInsert(
                 new BoardInsertDto("타이틀" , "컨텐트") ,
-                new UserDetailsDto(userRepository.findUserById("id")));
+                new UserDetailsDto(userRepository.findUserById("id").get()));
     }
 }
