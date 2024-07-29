@@ -90,7 +90,7 @@ public class BoardService {
     }
 
     @Transactional
-    public void boardDelete(Long boardNo, UserDetailsDto userDetailsDto) throws Exception {
+    public void boardDelete(Long boardNo, UserDetailsDto userDetailsDto){
 
         Board board = boardFindOneWithReply(boardNo);
         if (authCheck(board,userDetailsDto)) {
