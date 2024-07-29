@@ -50,4 +50,9 @@ public class Board {
         dateTime = LocalDateTime.now();
         return this.getId();
     }
+
+    public void addReply(Reply reply) {
+        this.replyList.add(reply);
+        reply.setBoard(this);
+    }
 }
