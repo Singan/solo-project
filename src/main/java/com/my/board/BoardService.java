@@ -93,7 +93,7 @@ public class BoardService {
     public void boardDelete(Long boardNo, UserDetailsDto userDetailsDto){
 
         Board board = boardFindOneWithReply(boardNo);
-        if (authCheck(board,userDetailsDto)) {
+        if (!authCheck(board,userDetailsDto)) {
             throw new UserException(UserErrorCode.USER_ACCESS_DENIED);
         }
         boardRepository.deleteById(board.getId());
@@ -102,7 +102,7 @@ public class BoardService {
     @Transactional
     public Long boardUpdate(BoardUpdateDto boardUpdateDto, UserDetailsDto userDetailsDto, Long boardNo) throws AuthenticationException {
         Board board = boardFindOneWithReply(boardNo);
-        if (authCheck(board, userDetailsDto)) {
+        if (!authCheck(board, userDetailsDto)) {
             throw new UserException(UserErrorCode.USER_ACCESS_DENIED);
         }
 
@@ -111,10 +111,10 @@ public class BoardService {
     }
 
     private boolean authCheck(Board board, UserDetailsDto userDetailsDto) {
-        if (board.getWriter().getNo() != userDetailsDto.getNo()) {
-            return false;
+        if (board.getWriter().getNo() == userDetailsDto.getNo()) {
+            return true;
         }
-        return true;
+        return false;
     }
 
     private Board boardFindOne(Long boardNo) {
