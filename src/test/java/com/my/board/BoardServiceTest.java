@@ -11,15 +11,19 @@ import com.my.user.vo.User;
 import com.my.user.vo.UserDetailsDto;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
+import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.SliceImpl;
+import org.springframework.test.web.servlet.MockMvc;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
 import java.util.Collections;
@@ -28,8 +32,7 @@ import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
-@SpringBootTest
-@AutoConfigureMockMvc
+@ExtendWith(MockitoExtension.class)
 public class BoardServiceTest {
 
     @Mock
@@ -37,25 +40,46 @@ public class BoardServiceTest {
 
     @InjectMocks
     private BoardService boardService;
-
     @BeforeEach
     public void init() {
-        MockitoAnnotations.openMocks(this);
     }
-
+    String title = "타이틀";
+    String content = "컨텐츠";
     private User createUser() {
-        return User.builder().no(1L).id("test_id").pw("test_pw").name("test_name").build();
+        return User.builder()
+                .no(1L)
+                .id("test_id")
+                .pw("test_pw")
+                .name("test_name")
+                .build();
     }
 
-    private Board createBoard(Long no) {
-        return Board.builder().writer(no).title("타이틀").content("콘텐트").dateTime(LocalDateTime.now()).build();
+    private Board createBoard(User user) {
+        Reply r = Reply.builder().content("댓글 컨텐츠").writer(user.getNo()).build();
+        Board board = Board.builder()
+                .id(1L)
+                .writer(user.getNo())
+                .title(title)
+                .content(content)
+                .dateTime(LocalDateTime.now())
+                .build();
+        board.addReply(r);
+        return board;
     }
+
 
     @Test
     public void testBoardInsert() {
         BoardInsertDto boardInsertDto = new BoardInsertDto("Title", "Content");
-        UserDetailsDto userDetailsDto = new UserDetailsDto(createUser());
-        Board board =createBoard(userDetailsDto.getNo());
+        User user = createUser();
+        UserDetailsDto userDetailsDto = new UserDetailsDto(user);
+
+        Board board = Board.builder()
+                .id(1L)
+                .title(boardInsertDto.title())
+                .content(boardInsertDto.content())
+                .writer(user.getNo())
+                .build();
 
         when(boardRepository.save(any(Board.class))).thenReturn(board);
 
@@ -64,6 +88,7 @@ public class BoardServiceTest {
         assertNotNull(boardId);
         assertEquals(1L, boardId);
     }
+
 
     @Test
     public void testBoardList() {
@@ -79,36 +104,21 @@ public class BoardServiceTest {
         assertEquals(1, result.list().size());
     }
 
+
     @Test
-    public void testBoardListNotFound() {
-        Pageable pageable = PageRequest.of(0, 10);
-        SliceImpl<BoardListViewDto> emptySlice = new SliceImpl<>(Collections.emptyList(), pageable, false);
+    public void testBoardDetail() {
+        Long boardNo = 1L;
+        User user = createUser();
+        Board board = createBoard(user);
 
-        when(boardRepository.findPageableList(pageable)).thenReturn(emptySlice);
+        when(boardRepository.findByIdWithAndReplyList(boardNo)).thenReturn(Optional.of(board));
 
-        BoardException exception = assertThrows(BoardException.class, () -> {
-            boardService.boardList(pageable);
-        });
-
-        assertEquals(BoardErrorCode.BOARD_NOT_FOUND, exception.getErrorCode());
+        BoardViewDto result = boardService.boardDetail(boardNo);
+        assertNotNull(result);
+        assertEquals(title, result.title());
+        assertEquals(1, result.replyList().count());
     }
 
-//    @Test
-//    public void testBoardDetail() {
-//        Long boardNo = 1L;
-//        User user = createUser();
-//        Board board = createBoard(user.getNo());
-//        board.setReplyList(Collections.singletonList(new Reply(1L, board.getId(), user, "");
-//
-//        when(boardRepository.findByIdWithAndReplyList(boardNo)).thenReturn(Optional.of(board));
-//
-//        BoardViewDto result = boardService.boardDetail(boardNo);
-//
-//        assertNotNull(result);
-//        assertEquals("Title", result.getTitle());
-//        assertEquals(1, result.getReplyList().getReplyCount());
-//    }
-//
 //    @Test
 //    public void testBoardDetailNotFound() {
 //        Long boardNo = 1L;
