@@ -86,12 +86,7 @@ public class BoardServiceTest {
             User user = createUser();
             UserDetailsDto userDetailsDto = new UserDetailsDto(user);
 
-            Board board = Board.builder()
-                    .id(1L)
-                    .title(boardInsertDto.title())
-                    .content(boardInsertDto.content())
-                    .writer(user.getNo())
-                    .build();
+            Board board = createBoard(user);
 
             when(boardRepository.save(any(Board.class))).thenReturn(board);
 
