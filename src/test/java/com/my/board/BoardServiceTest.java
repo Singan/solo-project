@@ -152,7 +152,7 @@ public class BoardServiceTest {
             UserDetailsDto userDetailsDto = new UserDetailsDto(user);
             Board board = createBoard(user);
 
-            when(boardRepository.findByIdWithAndReplyList(boardNo)).thenReturn(Optional.of(board));
+            when(boardRepository.findById(boardNo)).thenReturn(Optional.of(board));
 
             doNothing().when(boardRepository).deleteById(boardNo);
 
@@ -192,7 +192,7 @@ public class BoardServiceTest {
                     .build());
             Board board = createBoard(user);
 
-            when(boardRepository.findByIdWithAndReplyList(boardNo)).thenReturn(Optional.of(board));
+            when(boardRepository.findById(boardNo)).thenReturn(Optional.of(board));
 
             UserException exception = assertThrows(UserException.class, () -> {
                 boardService.boardDelete(boardNo, userDetailsDto);
