@@ -77,11 +77,11 @@ public class UserServiceTest {
 
             when(userRepository.existsUserById(userJoinDto.id())).thenReturn(true);
 
-            IllegalStateException exception = assertThrows(IllegalStateException.class, () -> {
+            UserException exception = assertThrows(UserException.class, () -> {
                 userService.userJoin(userJoinDto);
             });
 
-            assertEquals("중복된 계정입니다.", exception.getMessage());
+            assertEquals(UserErrorCode.USER_ALREADY_EXISTS, exception.getErrorCode());
             verify(userRepository, never()).save(any(User.class));
         }
     }
