@@ -1,16 +1,20 @@
 package com.my.user;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.my.user.vo.User;
 import com.my.user.vo.UserDetailsDto;
 import com.my.user.vo.UserJoinDto;
 import com.my.user.vo.UserLoginDto;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.MediaType;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.test.annotation.Rollback;
+import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.RequestBuilder;
 import org.springframework.test.web.servlet.ResultActions;
@@ -21,7 +25,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 @SpringBootTest
 @AutoConfigureMockMvc
-@Rollback
+@ActiveProfiles("test")
 @Transactional
 public class UserTest {
 
@@ -32,6 +36,22 @@ public class UserTest {
     ObjectMapper objectMapper;
     String id = "타이틀";
     String pw = "콘텐트";
+    @Autowired
+    PasswordEncoder passwordEncoder;
+    @Autowired
+    UserRepository userRepository;
+    @BeforeEach
+    void init() {
+        //미리 준비된 유저 계정 객체 생성
+        User user = User.builder()
+                .id(id)
+                .pw(passwordEncoder.encode(pw))
+                .name("init user")
+                .type("naver")
+                .build();
+        userRepository.save(user);
+    }
+
 
     @Test
     @DisplayName("유저 회원가입 성공")
