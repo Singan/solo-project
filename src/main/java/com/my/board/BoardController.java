@@ -122,7 +122,7 @@ public class BoardController {
             } 
     )
     public ResponseEntity<Void> boardDelete(
-            @PathVariable Long boardNo,
+            @PathVariable("boardNo") Long boardNo,
             @AuthenticationPrincipal UserDetailsDto userDetailsDto
     ) throws Exception {
         try {
@@ -152,7 +152,7 @@ public class BoardController {
     public ResponseEntity<Void> boardUpdate(
             @RequestBody BoardUpdateDto boardUpdateDto,
             @AuthenticationPrincipal UserDetailsDto userDetailsDto,
-            @PathVariable Long boardNo
+            @PathVariable("boardNo") Long boardNo
     ) {
         try {
             boardService.boardUpdate(boardUpdateDto, userDetailsDto, boardNo);
