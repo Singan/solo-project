@@ -27,7 +27,7 @@ public interface BoardRepository extends JpaRepository<Board, Long> {
 
     @Query(value = "SELECT COUNT(1) FROM (" +
             "SELECT 1 FROM " +
-            " Board b WHERE " +
+            " board b WHERE " +
             " b.id < :id ORDER BY b.id DESC limit :n) AS subquery"
             ,nativeQuery = true
     )
