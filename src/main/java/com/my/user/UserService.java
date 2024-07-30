@@ -24,7 +24,7 @@ public class UserService {
     @Transactional
     public void userJoin(UserJoinDto userJoinDto) {
         if (userExist(userJoinDto.id())) {
-            throw new IllegalStateException("중복된 계정입니다.");
+            throw new UserException(UserErrorCode.USER_ALREADY_EXISTS);
         }
 
         userRepository.save(userJoinDto.getUser(passwordEncoder));
