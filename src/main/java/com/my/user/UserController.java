@@ -27,7 +27,7 @@ public class UserController {
 
     private final UserService userService;
 
-    @PostMapping("/signin")
+    @PostMapping("/signup")
     @Operation(
             summary = "회원 가입",
             description = "새로운 유저를 등록합니다.",
@@ -66,7 +66,7 @@ public class UserController {
     }
 
 
-    @PostMapping("/signup")
+    @PostMapping("/signin")
     @Operation(
             summary = "유저 로그인 API",
             description = "유저 로그인 기능을 제공합니다.",

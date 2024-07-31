@@ -63,8 +63,9 @@ public class BoardTest {
     void init() {
         //미리 준비된 유저 계정 객체 생성
         User user = User.builder()
+                .id("id")
+                .pw("pw")
                 .name("name")
-                .type("naver")
                 .build();
         //Board.writer 에 들어갈 User 미리 생성 후 저장
         // 삭제 수정을 위한 board 미리 DB에 저장

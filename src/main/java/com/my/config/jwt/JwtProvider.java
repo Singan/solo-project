@@ -80,7 +80,6 @@ public class JwtProvider {
         Map<String, Object> claims = new HashMap<>();
         claims.put("userNo", user.getNo());
         claims.put("userName" , user.getName());
-        claims.put("userType" , user.getType());
         return claims;
     }
 
@@ -92,14 +91,12 @@ public class JwtProvider {
 
     public User getTokenConvertUser (final String token) { // 토큰을 유저 객체로 바꾸어준다.
         Claims claims = getClaimsFromToken(token);
-        String type = claims.get("userType").toString();
         Long no = Long.parseLong(claims.get("userNo").toString());
         String name = claims.get("userName").toString();
         User member = User
                 .builder()
                 .no(no)
                 .name(name)
-                .type(type)
                 .build();
         return member;
     }
