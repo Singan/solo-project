@@ -28,6 +28,7 @@ import java.util.Collections;
 @EnableWebSecurity
 public class MySecurity {
     private final JwtAuthFilter jwtAuthFilter;
+
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
 
@@ -40,11 +41,11 @@ public class MySecurity {
                             return config;
                         }
                 )).authorizeHttpRequests((requests) -> requests
-                        .requestMatchers(HttpMethod.POST,"/user", "/user/login").permitAll()
+                        .requestMatchers(HttpMethod.POST, "/user", "/user/login").permitAll()
                         .requestMatchers(HttpMethod.GET,
                                 "/board",
                                 "/metrics/**",
-                                "/user/test" ,
+                                "/user/test",
                                 "/board/**",
                                 "/actuator/**",
                                 "/actuator/prometheus/**").permitAll()
@@ -53,10 +54,13 @@ public class MySecurity {
                         .anyRequest().authenticated()
                 )
                 .csrf(AbstractHttpConfigurer::disable).httpBasic(HttpBasicConfigurer::disable)
-                .addFilterBefore(jwtAuthFilter , UsernamePasswordAuthenticationFilter.class);
+                .addFilterBefore(jwtAuthFilter, UsernamePasswordAuthenticationFilter.class)
+                .sessionManagement(httpSecuritySessionManagementConfigurer ->
+                        httpSecuritySessionManagementConfigurer.sessionCreationPolicy(SessionCreationPolicy.STATELESS));
         return http.build();
 
     }
+
     @Bean
     public PasswordEncoder passwordEncoder() {
         return new BCryptPasswordEncoder();
