@@ -1,5 +1,6 @@
 package com.my.board.vo;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.my.reply.vo.Reply;
 import com.my.user.vo.User;
 import jakarta.persistence.*;
@@ -22,10 +23,12 @@ public class Board {
     private String title;
     @JoinColumn
     @ManyToOne(fetch = FetchType.LAZY)
+    @JsonIgnore
     private User writer;
 
     @OneToMany(mappedBy = "board",cascade = CascadeType.ALL)
     @BatchSize(size = 2)
+    @JsonIgnore
     private List<Reply> replyList = new ArrayList<>();
 
     @CreatedDate
@@ -46,5 +49,10 @@ public class Board {
         this.content = content;
         dateTime = LocalDateTime.now();
         return this.getId();
+    }
+
+    public void addReply(Reply reply) {
+        this.replyList.add(reply);
+        reply.setBoard(this);
     }
 }

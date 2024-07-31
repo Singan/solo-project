@@ -7,5 +7,4 @@ public class UserViewDto {
     private final Long no;
 
     private final String name;
-    private final String type;
 }
