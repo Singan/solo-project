@@ -47,7 +47,6 @@ public class UserTest {
                 .id(id)
                 .pw(passwordEncoder.encode(pw))
                 .name("init user")
-                .type("naver")
                 .build();
         userRepository.save(user);
     }
@@ -57,11 +56,11 @@ public class UserTest {
     @DisplayName("유저 회원가입 성공")
     void userJoinSuccess() throws Exception {
         //given
-        UserJoinDto userJoinDto = new UserJoinDto("새로운 유저" , "비밀번호","이름" , "없음");
+        UserJoinDto userJoinDto = new UserJoinDto("새로운 유저" , "비밀번호","이름");
         String body = objectMapper.writeValueAsString(userJoinDto);
         //when
         ResultActions result = mockMvc.perform(
-                MockMvcRequestBuilders.post("/user")
+                MockMvcRequestBuilders.post("/users/signup")
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(body));
 
@@ -74,11 +73,11 @@ public class UserTest {
     @DisplayName("유저 회원가입 실패")
     void userJoinFail() throws Exception {
         //given
-        UserJoinDto userJoinDto = new UserJoinDto(id , pw,"이름" , "없음");
+        UserJoinDto userJoinDto = new UserJoinDto(id , pw,"이름" );
         String body = objectMapper.writeValueAsString(userJoinDto);
         //when
         ResultActions result = mockMvc.perform(
-                MockMvcRequestBuilders.post("/user")
+                MockMvcRequestBuilders.post("/users/signup")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(body));
         //then
@@ -95,7 +94,7 @@ public class UserTest {
 
         //when
         ResultActions result = mockMvc.perform(
-                MockMvcRequestBuilders.post("/user/login")
+                MockMvcRequestBuilders.post("/users/signin")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(body));
         //then
@@ -110,7 +109,7 @@ public class UserTest {
 
         //when
         ResultActions result = mockMvc.perform(
-                MockMvcRequestBuilders.post("/user/login")
+                MockMvcRequestBuilders.post("/users/signin")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(body));
         //then
@@ -125,7 +124,7 @@ public class UserTest {
 
         //when
         ResultActions result = mockMvc.perform(
-                MockMvcRequestBuilders.post("/user/login")
+                MockMvcRequestBuilders.post("/users/signin")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(body));
         //then

@@ -60,7 +60,7 @@ public class UserServiceTest {
         @Test
         @DisplayName("성공 케이스")
         public void testUserJoinSuccess() {
-            UserJoinDto userJoinDto = new UserJoinDto(id, pw, "test_name","1");
+            UserJoinDto userJoinDto = new UserJoinDto(id, pw, "test_name");
 
             when(userRepository.existsUserById(userJoinDto.id())).thenReturn(false);
             when(passwordEncoder.encode(userJoinDto.pw())).thenReturn("encoded_password");
@@ -73,7 +73,7 @@ public class UserServiceTest {
         @Test
         @DisplayName("실패 케이스 - 중복된 계정")
         public void testUserJoinDuplicateId() {
-            UserJoinDto userJoinDto = new UserJoinDto(id, pw, "test_name","1");
+            UserJoinDto userJoinDto = new UserJoinDto(id, pw, "test_name");
 
             when(userRepository.existsUserById(userJoinDto.id())).thenReturn(true);
 
