@@ -23,7 +23,7 @@ import javax.security.sasl.AuthenticationException;
 
 
 @RestController
-@RequestMapping("/board")
+@RequestMapping("/boards")
 @RequiredArgsConstructor
 @Tag(name = "게시판", description = "게시판 기능 API")
 public class BoardController {
