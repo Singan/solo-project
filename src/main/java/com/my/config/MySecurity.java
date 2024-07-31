@@ -42,11 +42,10 @@ public class MySecurity {
                             return config;
                         }
                 )).authorizeHttpRequests((requests) -> requests
-                        .requestMatchers(HttpMethod.POST, "/user", "/user/login").permitAll()
+                        .requestMatchers(HttpMethod.POST, "/users/signin", "/users/signup").permitAll()
                         .requestMatchers(HttpMethod.GET,
                                 "/board",
                                 "/metrics/**",
-                                "/user/test",
                                 "/board/**",
                                 "/actuator/**",
                                 "/actuator/prometheus/**",
