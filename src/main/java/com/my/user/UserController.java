@@ -19,7 +19,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
-@RequestMapping("/user")
+@RequestMapping("/users")
 @RequiredArgsConstructor
 @LogClass
 @Tag(name = "유저", description = "유저 관리 API")
@@ -27,7 +27,7 @@ public class UserController {
 
     private final UserService userService;
 
-    @PostMapping
+    @PostMapping("/signin")
     @Operation(
             summary = "회원 가입",
             description = "새로운 유저를 등록합니다.",
@@ -66,9 +66,9 @@ public class UserController {
     }
 
 
-    @PostMapping("/login")
+    @PostMapping("/signup")
     @Operation(
-            summary = "로그인",
+            summary = "유저 로그인 API",
             description = "유저 로그인 기능을 제공합니다.",
             requestBody = @io.swagger.v3.oas.annotations.parameters.RequestBody(
                     description = "로그인에 필요한 정보",
