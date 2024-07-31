@@ -44,9 +44,9 @@ public class MySecurity {
                 )).authorizeHttpRequests((requests) -> requests
                         .requestMatchers(HttpMethod.POST, "/users/signin", "/users/signup").permitAll()
                         .requestMatchers(HttpMethod.GET,
-                                "/board",
+                                "/boards",
                                 "/metrics/**",
-                                "/board/**",
+                                "/boards/**",
                                 "/actuator/**",
                                 "/actuator/prometheus/**",
                                 "/swagger-ui/**",
