@@ -14,7 +14,7 @@ import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
-@RequestMapping("/reply")
+@RequestMapping("/replys")
 @RequiredArgsConstructor
 @Tag(name = "Reply", description = "댓글 관련 API")
 public class ReplyController {
