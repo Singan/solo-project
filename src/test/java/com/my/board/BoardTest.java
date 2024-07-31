@@ -49,7 +49,7 @@ public class BoardTest {
     @Autowired
     JwtProvider jwtProvider;
     String token;
-    String url = "/board";
+    String url = "/boards";
     Board board;
     private Board createBoard(User user) {
         Board board = Board.builder()
