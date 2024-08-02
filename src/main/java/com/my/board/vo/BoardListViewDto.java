@@ -13,5 +13,8 @@ public record BoardListViewDto(
         String title,
         @Schema(description = "작성 일시")
 
-        LocalDateTime dateTime) {
+        LocalDateTime dateTime,
+        @Schema(description = "작성자")
+
+        String name) {
 }
