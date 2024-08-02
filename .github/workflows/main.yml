@@ -1,8 +1,9 @@
 env:
-  S3_BUCKET_NAME: clothstar-bucket
-  CODE_DEPLOY_APP_NAME: clothstar-deploy-v2
-  DEPLOYMENT_GROUP_NAME: clothstar_deploy
-  ZIP_FILE_NAME: clothstar-deploy.zip
+  S3_BUCKET_NAME: my-project
+  CODE_DEPLOY_APP_NAME: my-project-code-deploy
+  DEPLOYMENT_GROUP_NAME: my-group
+  ZIP_FILE_NAME: my-project.zip
+  BUCKET_NAME: myporject-deploy-s3
 
 name: aws-deploy
 on:
@@ -24,3 +25,12 @@ jobs:
       - name: Make zip file
         run: zip -r ./$ZIP_FILE_NAME .
         shell: bash
+        ##
+      - name: Configure AWS credentials
+        uses: aws-actions/configure-aws-credentials@v1
+        with:
+          aws-access-key-id: ${{ secrets.ACCESS_KEY }} # 등록한 Github Secret이 자동으로 불려온다.
+          aws-secret-access-key: ${{ secrets.SECRET_KEY }} # 등록한 Github Secret이 자동으로 불려온다.
+          aws-region: ap-northeast-2
+      - name: Upload to S3
+        run: aws s3 cp
