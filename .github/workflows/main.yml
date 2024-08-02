@@ -33,7 +33,7 @@ jobs:
         run: chmod +x ./gradlew
         shell: bash
       - name: Build with Gradle
-        run: ./gradlew build -i
+        run: ./gradlew build
       - name: Make zip file
         run: zip -r ./$ZIP_FILE_NAME .
         shell: bash
