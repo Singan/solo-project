@@ -19,11 +19,9 @@ import java.util.Optional;
 
 @Repository
 public interface BoardRepository extends JpaRepository<Board, Long> {
-    @Query("select new com.my.board.vo.BoardListViewDto(b.id , b.title , b.dateTime) from Board b")
+    @Query("select new com.my.board.vo.BoardListViewDto(b.id , b.title , b.dateTime,b.writer.name) from Board b")
+    @EntityGraph(attributePaths = {"writer" })
     Slice<BoardListViewDto> findPageableList(Pageable pageable);
-
-//    @Query("select new com.my.board.vo.BoardListViewDto(b.id , b.title , b.dateTime) from Board b order by b.id desc limit 10")
-//    List<BoardListViewDto> findBoard();
 
     @Query(value = "SELECT COUNT(1) FROM (" +
             "SELECT 1 FROM " +
