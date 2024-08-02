@@ -21,8 +21,6 @@ jobs:
 
       - name: Setup Gradle
         uses: gradle/actions/setup-gradle@417ae3ccd767c252f5661f1ace9f835f9654f2b5 # v3.1.0
-        with:
-          arguments: build
       - name: Setup MySQL
         uses: samin/mysql-action@v1
         with:
@@ -35,7 +33,7 @@ jobs:
         run: chmod +x ./gradlew
         shell: bash
       - name: Build with Gradle
-        run: ./gradlew build
+        run: ./gradlew build -i
       - name: Make zip file
         run: zip -r ./$ZIP_FILE_NAME .
         shell: bash
