@@ -1,9 +1,9 @@
 #!/usr/bin/env bash
 
-REPOSITORY=/home/ec2-user/cicdproject
+REPOSITORY=/home/ec2-user/my-app
 cd $REPOSITORY
 
-APP_NAME=cicdproject
+APP_NAME=my-project
 JAR_NAME=$(ls $REPOSITORY/build/libs/ | grep 'SNAPSHOT.jar' | tail -n 1)
 JAR_PATH=$REPOSITORY/build/libs/$JAR_NAME
 
@@ -18,5 +18,11 @@ else
   sleep 5
 fi
 
+PROPERTIES_FILE="application-server.properties"
 echo "> $JAR_PATH 배포"
-nohup java -jar $JAR_PATH > /dev/null 2> /dev/null < /dev/null &
+nohup java -jar $JAR_PATH --spring.config.location=file:$PROPERTIES_FILE > /dev/null 2> /dev/null < /dev/null &
+
+
+
+
+ 
