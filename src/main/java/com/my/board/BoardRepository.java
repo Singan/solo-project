@@ -23,9 +23,6 @@ public interface BoardRepository extends JpaRepository<Board, Long> {
     @EntityGraph(attributePaths = {"writer" })
     Slice<BoardListViewDto> findPageableList(Pageable pageable);
 
-//    @Query("select new com.my.board.vo.BoardListViewDto(b.id , b.title , b.dateTime) from Board b order by b.id desc limit 10")
-//    List<BoardListViewDto> findBoard();
-
     @Query(value = "SELECT COUNT(1) FROM (" +
             "SELECT 1 FROM " +
             " board b WHERE " +
