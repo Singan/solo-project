@@ -18,9 +18,18 @@ jobs:
         with:
           java-version: '21'
           distribution: 'temurin'
-          
+
       - name: Setup Gradle
         uses: gradle/actions/setup-gradle@417ae3ccd767c252f5661f1ace9f835f9654f2b5 # v3.1.0
+        argument: build
+
+      - name: Setup MySQL
+        uses: samin/mysql-action@v1
+        with:
+          character set server: 'utf8'
+          mysql database: 'my-project'
+          mysql user: 'root'
+          mysql password: 'a990515b'
 
       - name: Grant execute permission for gradlew
         run: chmod +x ./gradlew
