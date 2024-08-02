@@ -117,7 +117,13 @@ public class BoardServiceTest {
 
         public void testBoardList() {
             Pageable pageable = PageRequest.of(0, 10);
-            List<BoardListViewDto> boardList = Collections.singletonList(new BoardListViewDto(1L, "Title", LocalDateTime.now()));
+            Board board = createBoard(createUser());
+            List<BoardListViewDto> boardList = Collections.singletonList(
+                    new BoardListViewDto(
+                            board.getId(),
+                            board.getTitle(),
+                            board.getDateTime(),
+                            board.getWriter().getName()));
             SliceImpl<BoardListViewDto> slice = new SliceImpl<>(boardList, pageable, false);
 
             when(boardRepository.findPageableList(pageable)).thenReturn(slice);
