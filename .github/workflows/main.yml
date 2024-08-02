@@ -18,6 +18,10 @@ jobs:
         with:
           java-version: '21'
           distribution: 'temurin'
+          
+      - name: Setup Gradle
+        uses: gradle/actions/setup-gradle@417ae3ccd767c252f5661f1ace9f835f9654f2b5 # v3.1.0
+
       - name: Grant execute permission for gradlew
         run: chmod +x ./gradlew
         shell: bash
@@ -34,4 +38,4 @@ jobs:
           aws-secret-access-key: ${{ secrets.SECRET_KEY }} # 등록한 Github Secret이 자동으로 불려온다.
           aws-region: ap-northeast-2
       - name: Upload to S3
-        run: aws s3 cp
+        run: aws s3 cp ./$ZIP_FILE_NAME s3://$BUCKET_NAME/$ZIP_FILE_NAME
