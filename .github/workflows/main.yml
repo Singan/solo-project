@@ -46,3 +46,10 @@ jobs:
           aws-region: ap-northeast-2
       - name: Upload to S3
         run: aws s3 cp ./$ZIP_FILE_NAME s3://$BUCKET_NAME/$ZIP_FILE_NAME
+
+      - name: Code Deploy
+        run: >
+          aws deploy create-deployment --application-name $CODE_DEPLOY_APP_NAME
+          --deployment-config-name CodeDeployDefault.AllAtOnce
+          --deployment-group-name $DEPLOYMENT_GROUP_NAME
+          --s3-location bucket=$S3_BUCKET_NAME,bundleType=zip,key=$PROJECT_NAME/$GITHUB_SHA.zip
