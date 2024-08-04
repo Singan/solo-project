@@ -2,6 +2,8 @@ package com.my.reply;
 
 import com.my.aop.LogClass;
 import com.my.board.BoardService;
+import com.my.board.exception.BoardErrorCode;
+import com.my.board.exception.BoardException;
 import com.my.reply.vo.Reply;
 import com.my.reply.vo.ReplyInsertDto;
 import com.my.reply.vo.ReplyUpdateDto;
@@ -27,7 +29,7 @@ public class ReplyService {
         replyRepository.save(reply);
     }
 
-    private boolean checkPermissions(Long replyNo , Long userNo){
+    private boolean authChk(Long replyNo , Long userNo){
         try{
             Reply reply = findOneReply(replyNo);
             if(reply.getWriter().getNo() == userNo){
@@ -41,12 +43,12 @@ public class ReplyService {
     }
 
     private Reply findOneReply(Long replyNo){
-        return replyRepository.findById(replyNo).orElseThrow(() -> new RuntimeException("없는 댓글 입니다."));
+        return replyRepository.findById(replyNo).orElseThrow(() -> new BoardException(BoardErrorCode.BOARD_NOT_FOUND));
     }
     @Transactional
     public void replyUpdate(ReplyUpdateDto replyUpdateDto, UserDetailsDto userDetailsDto) {
         Long replyNo = replyUpdateDto.replyNo();
-        checkPermissions(replyNo , userDetailsDto.getNo());
+        authChk(replyNo , userDetailsDto.getNo());
 
 
         Reply reply = Reply.builder()

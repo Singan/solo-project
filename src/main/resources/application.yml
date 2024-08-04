@@ -21,3 +21,10 @@ spring:
         max-size: 500
         queue-capacity: 200
         keep-alive: 30s
+
+springdoc:
+  swagger-ui:
+    groups-order: DESC
+    operationsSorter: method
+    display-request-duration: true
+    defaultModelsExpandDepth: -1

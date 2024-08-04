@@ -1,7 +1,9 @@
 package com.my.config;
 
 import com.my.aop.LogClass;
+import com.my.config.jwt.JwtAccessDeniedHandler;
 import com.my.config.jwt.JwtAuthFilter;
+import com.my.config.jwt.JwtAuthenticationEntryPoint;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
@@ -28,9 +30,9 @@ import java.util.Collections;
 @EnableWebSecurity
 public class MySecurity {
     private final JwtAuthFilter jwtAuthFilter;
+
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
-
         http.cors(corsCustomizer -> corsCustomizer.configurationSource(request -> {
                             CorsConfiguration config = new CorsConfiguration();
                             config.setAllowedOrigins(Collections.singletonList("*"));
@@ -40,23 +42,30 @@ public class MySecurity {
                             return config;
                         }
                 )).authorizeHttpRequests((requests) -> requests
-                        .requestMatchers(HttpMethod.POST,"/user", "/user/login").permitAll()
+                        .requestMatchers(HttpMethod.POST, "/users/signin", "/users/signup").permitAll()
                         .requestMatchers(HttpMethod.GET,
-                                "/board",
+                                "/boards",
                                 "/metrics/**",
-                                "/user/test" ,
-                                "/board/**",
+                                "/boards/**",
                                 "/actuator/**",
-                                "/actuator/prometheus/**").permitAll()
-
+                                "/actuator/prometheus/**",
+                                "/swagger-ui/**",
+                                "/v3/api-docs/**"
+                        ).permitAll()
 
                         .anyRequest().authenticated()
                 )
                 .csrf(AbstractHttpConfigurer::disable).httpBasic(HttpBasicConfigurer::disable)
-                .addFilterBefore(jwtAuthFilter , UsernamePasswordAuthenticationFilter.class);
+                .exceptionHandling(exceptionConfig -> exceptionConfig
+                        .authenticationEntryPoint(new JwtAuthenticationEntryPoint())
+                        .accessDeniedHandler(new JwtAccessDeniedHandler()))
+                .addFilterBefore(jwtAuthFilter, UsernamePasswordAuthenticationFilter.class)
+                .sessionManagement(httpSecuritySessionManagementConfigurer ->
+                        httpSecuritySessionManagementConfigurer.sessionCreationPolicy(SessionCreationPolicy.STATELESS));
         return http.build();
 
     }
+
     @Bean
     public PasswordEncoder passwordEncoder() {
         return new BCryptPasswordEncoder();

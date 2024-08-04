@@ -9,7 +9,7 @@ import java.util.Collection;
 public class UserDetailsDto extends UserViewDto implements UserDetails {
 
     public UserDetailsDto(User user) {
-        super(user.getNo(), user.getName(), user.getType());
+        super(user.getNo(), user.getName());
     }
 
     @Override

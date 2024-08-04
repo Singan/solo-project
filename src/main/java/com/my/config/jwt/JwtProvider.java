@@ -52,17 +52,12 @@ public class JwtProvider {
         if (token == null || token.isBlank())
             return false;
         try {
-            Claims claims = getClaimsFormToken(token);
-            if (null != claims) {
-                return true;
-            }
-            return false;
+            Claims claims = getClaimsFromToken(token);
+            return claims != null;
         } catch (ExpiredJwtException exception) {
-            throw new JwtException("토큰 만료");
+            return false;
         } catch (JwtException exception) {
-            throw new JwtException("Token Tampered");
-        } catch (NullPointerException exception) {
-            throw new JwtException("토큰이 존재하지 않습니다.");
+            return false;
         }
     }
 
@@ -85,26 +80,23 @@ public class JwtProvider {
         Map<String, Object> claims = new HashMap<>();
         claims.put("userNo", user.getNo());
         claims.put("userName" , user.getName());
-        claims.put("userType" , user.getType());
         return claims;
     }
 
-    private Claims getClaimsFormToken(final String token) {
+    private Claims getClaimsFromToken(final String token) {
 
         return Jwts.parser().setSigningKey(key)
                 .parseClaimsJws(token).getBody();
     }
 
     public User getTokenConvertUser (final String token) { // 토큰을 유저 객체로 바꾸어준다.
-        Claims claims = getClaimsFormToken(token);
-        String type = claims.get("userType").toString();
+        Claims claims = getClaimsFromToken(token);
         Long no = Long.parseLong(claims.get("userNo").toString());
         String name = claims.get("userName").toString();
         User member = User
                 .builder()
                 .no(no)
                 .name(name)
-                .type(type)
                 .build();
         return member;
     }
