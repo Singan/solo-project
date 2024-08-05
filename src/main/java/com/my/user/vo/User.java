@@ -1,10 +1,15 @@
 package com.my.user.vo;
 
+import com.my.user.role.UserRole;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+
+import javax.management.relation.Role;
+import java.util.Collection;
+import java.util.Collections;
 
 @Entity(name = "users")
 @Getter
@@ -18,13 +23,15 @@ public class User {
     private String pw;
 
     private String name;
+    @OneToMany(mappedBy = "user")
+    private Collection<UserRole> userRoles;
 
     @Builder
-    public User(Long no,String id, String pw, String name) {
+    public User(Long no, String id, String pw, String name, Collection<UserRole> userRoles) {
         this.no = no;
         this.id = id;
         this.pw = pw;
         this.name = name;
+        this.userRoles = userRoles;
     }
-
 }
