@@ -4,6 +4,8 @@ import com.my.config.jwt.JwtProvider;
 import com.my.user.UserService;
 import com.my.user.exception.UserException;
 import com.my.user.exception.UserErrorCode;
+import com.my.user.role.RoleEnum;
+import com.my.user.role.UserRole;
 import com.my.user.vo.User;
 import com.my.user.vo.UserJoinDto;
 import com.my.user.vo.UserLoginDto;
@@ -19,6 +21,7 @@ import org.mockito.MockitoAnnotations;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
+import java.util.Collections;
 import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -32,7 +35,8 @@ import java.util.Optional;
 public class UserServiceTest {
     @Mock
     private UserRepository userRepository;
-
+    @Mock
+    private UserRoleRepository userRoleRepository;
     @Mock
     private PasswordEncoder passwordEncoder;
 
@@ -45,12 +49,16 @@ public class UserServiceTest {
 
     String id = "test_id";
     String pw = "password";
+    String name = "test_name";
+    String email = "test_email";
+    String phone = "010-0000-0000";
     private User createUser() {
         return User.builder()
                 .no(1L)
                 .id(id)
                 .pw(passwordEncoder.encode(pw))
                 .name("test_name")
+                .userRoles(Collections.singleton(UserRole.builder().role(RoleEnum.USER).build()))
                 .build();
     }
 
@@ -60,7 +68,7 @@ public class UserServiceTest {
         @Test
         @DisplayName("성공 케이스")
         public void testUserJoinSuccess() {
-            UserJoinDto userJoinDto = new UserJoinDto(id, pw, "test_name");
+            UserJoinDto userJoinDto = new UserJoinDto(id, pw,name,email,phone );
 
             when(userRepository.existsUserById(userJoinDto.id())).thenReturn(false);
             when(passwordEncoder.encode(userJoinDto.pw())).thenReturn("encoded_password");
@@ -73,7 +81,7 @@ public class UserServiceTest {
         @Test
         @DisplayName("실패 케이스 - 중복된 계정")
         public void testUserJoinDuplicateId() {
-            UserJoinDto userJoinDto = new UserJoinDto(id, pw, "test_name");
+            UserJoinDto userJoinDto = new UserJoinDto(id, pw,name,email,phone);
 
             when(userRepository.existsUserById(userJoinDto.id())).thenReturn(true);
 

@@ -18,17 +18,16 @@ public class UserRole {
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
     @JoinColumn
-    @ManyToOne(fetch = FetchType.LAZY)
-    private User user;
+    private Long userid;
 
     @Enumerated(EnumType.STRING)
     @Column
     private RoleEnum role;
 
     @Builder
-    public UserRole(Long id, User user, RoleEnum role) {
+    public UserRole(Long id, Long userid, RoleEnum role) {
         this.id = id;
-        this.user = user;
+        this.userid = userid;
         this.role = role;
     }
 }
