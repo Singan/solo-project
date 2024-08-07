@@ -58,7 +58,6 @@ public class UserServiceTest {
                 .id(id)
                 .pw(passwordEncoder.encode(pw))
                 .name("test_name")
-                .userRoles(Collections.singleton(UserRole.builder().role(RoleEnum.USER).build()))
                 .build();
     }
 

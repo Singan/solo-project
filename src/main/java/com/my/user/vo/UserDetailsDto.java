@@ -14,6 +14,8 @@ public class UserDetailsDto extends UserViewDto implements UserDetails {
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
+        System.out.println("getAuthorities()");
+        getRoles().stream().forEach(System.out::println);
         return getRoles().stream().map(userRole -> userRole.getRole()).toList();
     }
 

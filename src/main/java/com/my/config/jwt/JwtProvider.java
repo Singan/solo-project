@@ -1,6 +1,8 @@
 package com.my.config.jwt;
 
 import com.my.aop.LogClass;
+import com.my.user.role.RoleEnum;
+import com.my.user.role.UserRole;
 import com.my.user.vo.User;
 import io.jsonwebtoken.*;
 import io.jsonwebtoken.io.Decoders;
@@ -14,10 +16,9 @@ import org.springframework.stereotype.Component;
 
 import javax.crypto.spec.SecretKeySpec;
 import java.security.Key;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.Map;
+import java.util.*;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 @Component
 public class JwtProvider {
@@ -25,7 +26,9 @@ public class JwtProvider {
     private final String secret;
     private final long tokenValidityInMilliseconds;
     private final Key key;
-
+    private final String claimsKeyNo = "userNo";
+    private final String claimsKeyNameKey = "userName";
+    private final String claimsKeyRole = "userRole";
     public JwtProvider(@Value("${jwt.secret}") String secret) {
         this.secret = secret;
         key = createSignature(secret);
@@ -78,8 +81,9 @@ public class JwtProvider {
     private Map<String, Object> createClaims(final User user) {
         // 공개 클레임에 사용자의 이름과 이메일을 설정하여 정보를 조회할 수 있다.
         Map<String, Object> claims = new HashMap<>();
-        claims.put("userNo", user.getNo());
-        claims.put("userName" , user.getName());
+        claims.put(claimsKeyNo, user.getNo());
+        claims.put(claimsKeyNameKey, user.getName());
+        claims.put(claimsKeyRole, user.getUserRoles().stream().map(UserRole::getRole).toList());
         return claims;
     }
 
@@ -89,15 +93,22 @@ public class JwtProvider {
                 .parseClaimsJws(token).getBody();
     }
 
-    public User getTokenConvertUser (final String token) { // 토큰을 유저 객체로 바꾸어준다.
+    public User getTokenConvertUser(final String token) { // 토큰을 유저 객체로 바꾸어준다.
         Claims claims = getClaimsFromToken(token);
         Long no = Long.parseLong(claims.get("userNo").toString());
         String name = claims.get("userName").toString();
-        User member = User
+        Object rolesObject = claims.get("userRole");
+        ArrayList<UserRole> roles = new ArrayList();
+        for (Object role : (List<?>) rolesObject) {
+            UserRole userRole = UserRole.builder().role(RoleEnum.valueOf(role.toString())).build();
+            roles.add(userRole);
+        }
+        User user = User
                 .builder()
                 .no(no)
                 .name(name)
                 .build();
-        return member;
+        user.setUserRoles(roles);
+        return user;
     }
 }

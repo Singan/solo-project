@@ -2,15 +2,13 @@ package com.my.user.vo;
 
 import com.my.user.role.UserRole;
 import jakarta.persistence.*;
-import lombok.AccessLevel;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 import javax.management.relation.Role;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
+import java.util.HashSet;
 
 @Entity(name = "users")
 @Getter
@@ -24,26 +22,28 @@ public class User {
     private String pw;
 
     private String name;
-    @OneToMany(mappedBy = "user")
-    private Collection<UserRole> userRoles = new ArrayList<>();
+    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
+    private Collection<UserRole> userRoles = new HashSet<>();
 
 
     private String email;
     private String phone;
 
     @Builder
-    public User(Long no, String id, String pw, String name, String phone, String email, Collection<UserRole> userRoles) {
+    public User(Long no, String id, String pw, String name, String phone, String email) {
         this.no = no;
         this.id = id;
         this.pw = pw;
         this.name = name;
         this.phone = phone;
         this.email = email;
-        this.userRoles.addAll(userRoles);
     }
 
     public void addRoles(UserRole userRoles) {
-        System.out.println(this.userRoles);
         this.userRoles.add(userRoles);
+        userRoles.setUser(this);
+    }
+    public void setUserRoles(Collection<UserRole> userRoles) {
+        userRoles.stream().forEach(this::addRoles);
     }
 }

@@ -26,7 +26,6 @@ import java.util.Arrays;
 @RequiredArgsConstructor
 public class JwtAuthFilter extends OncePerRequestFilter {
     private final JwtProvider jwtProvider;
-    private final AuthenticationEntryPoint entryPoint;
 
     public Authentication getAuthentication(User user) {
         UserDetailsDto userDetails = new UserDetailsDto(user);

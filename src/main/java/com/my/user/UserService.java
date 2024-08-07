@@ -28,9 +28,10 @@ public class UserService {
         if (userExist(userJoinDto.id())) {
             throw new UserException(UserErrorCode.USER_ALREADY_EXISTS);
         }
+
         User user = userJoinDto.getUser(passwordEncoder);
         userRepository.save(user);
-        UserRole userRole = UserRole.builder().userid(user.getNo()).role(RoleEnum.USER).build();
+        UserRole userRole = UserRole.builder().user(user).role(RoleEnum.USER).build();
         userRoleRepository.save(userRole);
     }
 
