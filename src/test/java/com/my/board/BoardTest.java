@@ -7,9 +7,13 @@ import com.my.board.vo.BoardUpdateDto;
 import com.my.config.jwt.JwtProvider;
 import com.my.reply.vo.Reply;
 import com.my.user.UserRepository;
+import com.my.user.UserRoleRepository;
+import com.my.user.role.RoleEnum;
+import com.my.user.role.UserRole;
 import com.my.user.vo.User;
 import com.my.user.vo.UserJoinDto;
 import com.my.user.vo.UserLoginDto;
+import jakarta.persistence.EntityManager;
 import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -29,6 +33,7 @@ import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
+import java.util.Collections;
 
 @SpringBootTest
 @AutoConfigureMockMvc
@@ -40,12 +45,15 @@ public class BoardTest {
     MockMvc mockMvc;
 
     @Autowired
+    UserRoleRepository userRoleRepository;
+    @Autowired
     ObjectMapper objectMapper;
     @Autowired
     BoardRepository boardRepository;
     @Autowired
     UserRepository userRepository;
-
+    @Autowired
+    EntityManager en;
     @Autowired
     JwtProvider jwtProvider;
     String token;
@@ -72,7 +80,19 @@ public class BoardTest {
         userRepository.save(user);
         board = createBoard(user);
         boardRepository.save(board);
+        // 유저 권한 설정
+        UserRole role = UserRole
+                .builder()
+                .role(RoleEnum.USER)
+                .user(user)
+                .build();
+        userRoleRepository.save(role);
+        user.addRoles(role);
 
+        user = userRepository.findUserById(user.getId()).get();
+        System.out.println("user role : "  + user.getUserRoles());
+        System.out.println("왜안돼?");
+        //토큰 생성
         token = jwtProvider.createToken(user);
     }
 

@@ -3,6 +3,8 @@ package com.my.user;
 import com.my.config.jwt.JwtProvider;
 import com.my.user.exception.UserErrorCode;
 import com.my.user.exception.UserException;
+import com.my.user.role.RoleEnum;
+import com.my.user.role.UserRole;
 import com.my.user.vo.User;
 import com.my.user.vo.UserJoinDto;
 import com.my.user.vo.UserLoginDto;
@@ -19,7 +21,7 @@ public class UserService {
     private final UserRepository userRepository;
     private final PasswordEncoder passwordEncoder;
     private final JwtProvider jwtProvider;
-
+    private final UserRoleRepository userRoleRepository;
 
     @Transactional
     public void userJoin(UserJoinDto userJoinDto) {
@@ -27,7 +29,10 @@ public class UserService {
             throw new UserException(UserErrorCode.USER_ALREADY_EXISTS);
         }
 
-        userRepository.save(userJoinDto.getUser(passwordEncoder));
+        User user = userJoinDto.getUser(passwordEncoder);
+        userRepository.save(user);
+        UserRole userRole = UserRole.builder().user(user).role(RoleEnum.USER).build();
+        userRoleRepository.save(userRole);
     }
 
     private boolean userExist(String id) {

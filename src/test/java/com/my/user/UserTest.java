@@ -56,7 +56,7 @@ public class UserTest {
     @DisplayName("유저 회원가입 성공")
     void userJoinSuccess() throws Exception {
         //given
-        UserJoinDto userJoinDto = new UserJoinDto("새로운 유저" , "비밀번호","이름");
+        UserJoinDto userJoinDto = new UserJoinDto("새로운 유저" , "비밀번호","이름","이메일","010-0000-0000");
         String body = objectMapper.writeValueAsString(userJoinDto);
         //when
         ResultActions result = mockMvc.perform(
@@ -73,7 +73,7 @@ public class UserTest {
     @DisplayName("유저 회원가입 실패")
     void userJoinFail() throws Exception {
         //given
-        UserJoinDto userJoinDto = new UserJoinDto(id , pw,"이름" );
+        UserJoinDto userJoinDto = new UserJoinDto(id, pw,"이름","email","phone" );
         String body = objectMapper.writeValueAsString(userJoinDto);
         //when
         ResultActions result = mockMvc.perform(

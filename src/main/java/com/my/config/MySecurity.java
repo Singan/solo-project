@@ -52,7 +52,11 @@ public class MySecurity {
                                 "/swagger-ui/**",
                                 "/v3/api-docs/**"
                         ).permitAll()
-
+                        .requestMatchers(HttpMethod.POST,"/boards" , "/boards/**").hasAnyRole("USER")
+                        .requestMatchers(HttpMethod.DELETE,"/boards" , "/boards/**").hasAnyRole("USER")
+                        .requestMatchers(HttpMethod.PUT,"/boards" , "/boards/**").hasAnyRole("USER")
+                        .requestMatchers(HttpMethod.POST,"/replys").hasAnyRole("USER")
+                        .requestMatchers(HttpMethod.PUT,"/replys").hasAnyRole("USER")
                         .anyRequest().authenticated()
                 )
                 .csrf(AbstractHttpConfigurer::disable).httpBasic(HttpBasicConfigurer::disable)
