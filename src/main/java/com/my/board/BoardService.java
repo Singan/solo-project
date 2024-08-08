@@ -114,8 +114,7 @@ public class BoardService {
                 writerDay.getMinute(),
                 writerDay.getSecond()
         );
-        LocalDateTime now = LocalDateTime.now();
-        return boardDate.isAfter(now);
+        return boardDate.isBefore(LocalDateTime.now());
     }
     private boolean authCheck(Board board, UserDetailsDto userDetailsDto) {
         if (board.getWriter().getNo() == userDetailsDto.getNo()) {
