@@ -19,7 +19,7 @@ import javax.security.sasl.AuthenticationException;
 import java.time.LocalDateTime;
 import java.util.List;
 
-import static com.my.board.exception.BoardErrorCode.BOARD_DATE_PASSED;
+import static com.my.board.exception.BoardErrorCode.*;
 
 @Service
 @RequiredArgsConstructor
@@ -27,7 +27,7 @@ import static com.my.board.exception.BoardErrorCode.BOARD_DATE_PASSED;
 public class BoardService {
 
     private final BoardRepository boardRepository;
-
+    private static final int BOARD_UPDATE_ABLE_DAY = 10;
     @Transactional
 
     public Long boardInsert(BoardInsertDto boardDto, UserDetailsDto userDetailsDto) {
@@ -39,7 +39,7 @@ public class BoardService {
         Slice<BoardListViewDto> boardList = boardRepository.findPageableList(pageable);
 
         if (boardList.getSize() == 0)
-            throw new BoardException(BoardErrorCode.BOARD_NOT_FOUND);
+            throw new BoardException(BOARD_NOT_FOUND);
         return pagination(boardList.getContent(), pageable);
     }
 
@@ -54,7 +54,7 @@ public class BoardService {
         try {
             lastBoard = boardList.getLast();
         } catch (Exception e) {
-            throw new BoardException(BoardErrorCode.BOARD_NOT_FOUND);
+            throw new BoardException(BOARD_NOT_FOUND);
         }
 
 
@@ -109,7 +109,7 @@ public class BoardService {
         LocalDateTime boardDate = LocalDateTime.of(
                 writerDay.getYear() ,
                 writerDay.getMonth() ,
-                writerDay.getDayOfMonth() + 10,
+                writerDay.getDayOfMonth() + BOARD_UPDATE_ABLE_DAY,
                 writerDay.getHour(),
                 writerDay.getMinute(),
                 writerDay.getSecond()
@@ -125,12 +125,14 @@ public class BoardService {
     }
 
     private Board boardFindOne(Long boardNo) {
-        Board board = boardRepository.findById(boardNo).orElseThrow(() -> new BoardException(BoardErrorCode.BOARD_NOT_FOUND));
+        Board board = boardRepository.findById(boardNo).orElseThrow(() ->
+                new BoardException(BOARD_NOT_FOUND));
         return board;
     }
 
     private Board boardFindOneWithReply(Long boardNo) {
-        Board board = boardRepository.findByIdWithAndReplyList(boardNo).orElseThrow(() ->  new BoardException(BoardErrorCode.BOARD_NOT_FOUND));
+        Board board = boardRepository.findByIdWithAndReplyList(boardNo).orElseThrow(() ->
+                new BoardException(BOARD_NOT_FOUND));
         return board;
     }
 }
