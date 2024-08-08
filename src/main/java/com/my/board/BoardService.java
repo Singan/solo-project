@@ -109,11 +109,11 @@ public class BoardService {
         LocalDateTime boardDate = LocalDateTime.of(
                 writerDay.getYear() ,
                 writerDay.getMonth() ,
-                writerDay.getDayOfMonth() + BOARD_UPDATE_ABLE_DAY,
+                writerDay.getDayOfMonth(),
                 writerDay.getHour(),
                 writerDay.getMinute(),
                 writerDay.getSecond()
-        );
+        ).plusDays(BOARD_UPDATE_ABLE_DAY);
         return boardDate.isBefore(LocalDateTime.now());
     }
     private boolean authCheck(Board board, UserDetailsDto userDetailsDto) {

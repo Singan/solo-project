@@ -59,6 +59,8 @@ public class BoardTest {
     String token;
     String url = "/boards";
     Board board;
+    User user;
+
     private Board createBoard(User user) {
         Board board = Board.builder()
                 .writer(user.getNo())
@@ -70,7 +72,7 @@ public class BoardTest {
     @BeforeEach
     void init() {
         //미리 준비된 유저 계정 객체 생성
-        User user = User.builder()
+        user = User.builder()
                 .id("id")
                 .pw("pw")
                 .name("name")
@@ -117,7 +119,6 @@ public class BoardTest {
     @DisplayName("글 수정")
     void boardUpdate() throws Exception {
         //given
-        System.out.println("--------------인잇 끝");
         BoardUpdateDto boardUpdateDto = new BoardUpdateDto("타이틀 수정", "콘텐트 수정");
         String body = objectMapper.writeValueAsString(boardUpdateDto);
         //when
@@ -131,6 +132,30 @@ public class BoardTest {
 
         //then
         result.andExpect(MockMvcResultMatchers.status().isOk()).andDo(MockMvcResultHandlers.print());
+    }
+
+    @Test
+    @DisplayName("글 삽입 후 10일 경과")
+    void boardUpdateAfter10Day() throws Exception {
+        //given
+        Board board = Board.builder()
+                .writer(user.getNo())
+                .dateTime(LocalDateTime.now().minusDays(10))
+                .build();
+        boardRepository.save(board);
+        BoardUpdateDto boardUpdateDto = new BoardUpdateDto("타이틀 수정", "콘텐트 수정");
+        String body = objectMapper.writeValueAsString(boardUpdateDto);
+
+        //when
+        ResultActions result = mockMvc.perform(
+                MockMvcRequestBuilders.put(url + "/" + board.getId())
+                        .content(body)
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .header("X-AUTH-TOKEN", token)
+        );
+
+        //then
+        result.andExpect(MockMvcResultMatchers.status().is4xxClientError()).andDo(MockMvcResultHandlers.print());
     }
 
     @Test
@@ -159,7 +184,7 @@ public class BoardTest {
 
         //when
         ResultActions result = mockMvc.perform(
-                MockMvcRequestBuilders.get(url + "/" +board.getId())
+                MockMvcRequestBuilders.get(url + "/" + board.getId())
                         .contentType(MediaType.APPLICATION_JSON)
         );
 
