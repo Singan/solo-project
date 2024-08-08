@@ -1,6 +1,5 @@
 package com.my.board;
 
-import com.my.aop.LogClass;
 import com.my.board.exception.BoardErrorCode;
 import com.my.board.exception.BoardException;
 import com.my.board.vo.*;
@@ -10,24 +9,17 @@ import com.my.reply.vo.ReplyListDto;
 import com.my.reply.vo.ReplyViewDto;
 import com.my.user.exception.UserErrorCode;
 import com.my.user.exception.UserException;
-import com.my.user.vo.User;
 import com.my.user.vo.UserDetailsDto;
 import lombok.RequiredArgsConstructor;
-import org.springframework.boot.autoconfigure.data.web.SpringDataWebProperties;
-import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Slice;
-import org.springframework.data.jpa.support.PageableUtils;
-import org.springframework.scheduling.annotation.Async;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-
 import javax.security.sasl.AuthenticationException;
+import java.time.LocalDateTime;
 import java.util.List;
-import java.util.NoSuchElementException;
-import java.util.concurrent.CompletableFuture;
+
+import static com.my.board.exception.BoardErrorCode.*;
 
 @Service
 @RequiredArgsConstructor
@@ -35,7 +27,7 @@ import java.util.concurrent.CompletableFuture;
 public class BoardService {
 
     private final BoardRepository boardRepository;
-
+    private static final int BOARD_UPDATE_ABLE_DAY = 10;
     @Transactional
 
     public Long boardInsert(BoardInsertDto boardDto, UserDetailsDto userDetailsDto) {
@@ -47,7 +39,7 @@ public class BoardService {
         Slice<BoardListViewDto> boardList = boardRepository.findPageableList(pageable);
 
         if (boardList.getSize() == 0)
-            throw new BoardException(BoardErrorCode.BOARD_NOT_FOUND);
+            throw new BoardException(BOARD_NOT_FOUND);
         return pagination(boardList.getContent(), pageable);
     }
 
@@ -62,7 +54,7 @@ public class BoardService {
         try {
             lastBoard = boardList.getLast();
         } catch (Exception e) {
-            throw new BoardException(BoardErrorCode.BOARD_NOT_FOUND);
+            throw new BoardException(BOARD_NOT_FOUND);
         }
 
 
@@ -106,10 +98,24 @@ public class BoardService {
             throw new UserException(UserErrorCode.USER_ACCESS_DENIED);
         }
 
+        if(boardWriteDayDistanceNow(board)){
+            throw new BoardException(BOARD_DATE_PASSED);
+        }
         board.boardUpdate(boardUpdateDto.title(), boardUpdateDto.content());
         return board.getId();
     }
-
+    private boolean boardWriteDayDistanceNow(Board board){
+        LocalDateTime writerDay = board.getDateTime();
+        LocalDateTime boardDate = LocalDateTime.of(
+                writerDay.getYear() ,
+                writerDay.getMonth() ,
+                writerDay.getDayOfMonth() + BOARD_UPDATE_ABLE_DAY,
+                writerDay.getHour(),
+                writerDay.getMinute(),
+                writerDay.getSecond()
+        );
+        return boardDate.isBefore(LocalDateTime.now());
+    }
     private boolean authCheck(Board board, UserDetailsDto userDetailsDto) {
         if (board.getWriter().getNo() == userDetailsDto.getNo()) {
             return true;
@@ -118,12 +124,14 @@ public class BoardService {
     }
 
     private Board boardFindOne(Long boardNo) {
-        Board board = boardRepository.findById(boardNo).orElseThrow(() -> new BoardException(BoardErrorCode.BOARD_NOT_FOUND));
+        Board board = boardRepository.findById(boardNo).orElseThrow(() ->
+                new BoardException(BOARD_NOT_FOUND));
         return board;
     }
 
     private Board boardFindOneWithReply(Long boardNo) {
-        Board board = boardRepository.findByIdWithAndReplyList(boardNo).orElseThrow(() ->  new BoardException(BoardErrorCode.BOARD_NOT_FOUND));
+        Board board = boardRepository.findByIdWithAndReplyList(boardNo).orElseThrow(() ->
+                new BoardException(BOARD_NOT_FOUND));
         return board;
     }
 }

@@ -4,7 +4,6 @@ import com.my.board.exception.BoardErrorCode;
 import com.my.board.exception.BoardException;
 import com.my.board.vo.*;
 import com.my.config.exception.ErrorResponse;
-import com.my.config.exception.GlobalException;
 import com.my.user.vo.UserDetailsDto;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;

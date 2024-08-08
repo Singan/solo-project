@@ -90,8 +90,6 @@ public class BoardTest {
         user.addRoles(role);
 
         user = userRepository.findUserById(user.getId()).get();
-        System.out.println("user role : "  + user.getUserRoles());
-        System.out.println("왜안돼?");
         //토큰 생성
         token = jwtProvider.createToken(user);
     }
@@ -119,10 +117,11 @@ public class BoardTest {
     @DisplayName("글 수정")
     void boardUpdate() throws Exception {
         //given
+        System.out.println("--------------인잇 끝");
         BoardUpdateDto boardUpdateDto = new BoardUpdateDto("타이틀 수정", "콘텐트 수정");
         String body = objectMapper.writeValueAsString(boardUpdateDto);
         //when
-        System.out.println(board.getId());
+        Thread.sleep(1000);
         ResultActions result = mockMvc.perform(
                 MockMvcRequestBuilders.put(url + "/" + board.getId())
                         .content(body)
