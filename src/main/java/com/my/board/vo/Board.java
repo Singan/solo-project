@@ -35,13 +35,15 @@ public class Board {
     private LocalDateTime dateTime;
 
     private String content;
+    private Long views;
     @Builder
-    public Board(Long id,String title, Long writer, String content , LocalDateTime dateTime) {
+    public Board(Long id,String title, Long writer, String content , LocalDateTime dateTime , Long views) {
         this.id = id;
         this.title = title;
         this.writer = User.builder().no(writer).build();
         this.content = content;
         this.dateTime = dateTime;
+        this.views = views;
     }
 
     public Long boardUpdate(String title , String content){
