@@ -19,7 +19,7 @@ fi
 
 PROPERTIES_FILE="$REPOSITORY/application-server.properties"
 echo "> $JAR_PATH 배포"
-nohup java -jar $JAR_PATH --spring.config.location=file:$PROPERTIES_FILE > app.log 2>&1 &
+nohup java -jar $JAR_PATH -Dapp.name=$APP_NAME --spring.config.location=file:$PROPERTIES_FILE > app.log 2>&1 &
 
 
 
