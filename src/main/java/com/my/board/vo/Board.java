@@ -6,6 +6,7 @@ import com.my.user.vo.User;
 import jakarta.persistence.*;
 import lombok.*;
 import org.hibernate.annotations.BatchSize;
+import org.hibernate.annotations.ColumnDefault;
 import org.springframework.data.annotation.CreatedDate;
 
 import java.time.LocalDateTime;
@@ -35,9 +36,10 @@ public class Board {
     private LocalDateTime dateTime;
 
     private String content;
-    private Long views;
+    @ColumnDefault("0")
+    private long views = 0;
     @Builder
-    public Board(Long id,String title, Long writer, String content , LocalDateTime dateTime , Long views) {
+    public Board(Long id,String title, Long writer, String content , LocalDateTime dateTime , long views) {
         this.id = id;
         this.title = title;
         this.writer = User.builder().no(writer).build();
@@ -57,4 +59,8 @@ public class Board {
         this.replyList.add(reply);
         reply.setBoard(this);
     }
+    public void updateViews(){
+        this.views++;
+    }
+
 }
