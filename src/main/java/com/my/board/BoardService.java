@@ -84,7 +84,7 @@ public class BoardService {
                         new ReplyViewDto(reply.getId(), reply.getContent(), reply.getWriter().getName())
                 ).toList()
         );
-        updateViews(board);
+        board.updateViews();
 
         return new BoardViewDto(
                 board.getId(),
@@ -95,9 +95,7 @@ public class BoardService {
                 board.getViews()
         );
     }
-    public void updateViews(Board board){
-        boardRepository.updateBoardByViewsWithLock(board.getId());
-    }
+
     @Transactional
     public void boardDelete(Long boardNo, UserDetailsDto userDetailsDto) {
 

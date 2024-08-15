@@ -39,10 +39,6 @@ public interface BoardRepository extends JpaRepository<Board, Long> {
     @EntityGraph(attributePaths = {"writer","replyList","replyList.writer"})
     Optional<Board> findBoardById(@Param("no") Long no);
 
-    @Query("update Board set views = views+1 where id = :id")
-    @Modifying
-    void updateBoardByViewsWithLock(@Param("id") long id);
-
 //    @Modifying
 //    @EntityGraph(attributePaths = {"replyList"})
 //    Board deleteById(@Param("no")Long no);
