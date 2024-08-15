@@ -18,9 +18,9 @@ else
   sleep 5
 fi
 
-PROPERTIES_FILE="application-server.properties"
+PROPERTIES_FILE="$REPOSITORY/application-server.properties"
 echo "> $JAR_PATH 배포"
-nohup java -jar $JAR_PATH --spring.config.location=file:$PROPERTIES_FILE > /dev/null 2> /dev/null < /dev/null &
+nohup java -jar $JAR_PATH --spring.config.location=file:$PROPERTIES_FILE > app.log 2>&1 &
 
 
 
