@@ -105,7 +105,7 @@ public class BoardServiceTest {
             UserDetailsDto userDetailsDto = new UserDetailsDto(user);
             Board board = createBoard(user);
 
-            when(boardRepository.findByIdWithAndReplyList(boardNo)).thenReturn(Optional.of(board));
+            when(boardRepository.findBoardById(boardNo)).thenReturn(Optional.of(board));
 
             Long updatedBoardId = boardService.boardUpdate(boardUpdateDto, userDetailsDto, boardNo);
 
@@ -142,7 +142,7 @@ public class BoardServiceTest {
             User user = createUser();
             Board board = createBoard(user);
 
-            when(boardRepository.findByIdWithAndReplyList(boardNo)).thenReturn(Optional.of(board));
+            when(boardRepository.findBoardById(boardNo)).thenReturn(Optional.of(board));
 
             BoardViewDto result = boardService.boardDetail(boardNo);
             assertNotNull(result);
@@ -175,7 +175,7 @@ public class BoardServiceTest {
         public void testBoardDetailNotFound() {
             Long boardNo = 1L;
 
-            when(boardRepository.findByIdWithAndReplyList(boardNo)).thenReturn(Optional.empty());
+            when(boardRepository.findBoardById(boardNo)).thenReturn(Optional.empty());
 
             BoardException exception = assertThrows(BoardException.class, () -> {
                 boardService.boardDetail(boardNo);
@@ -223,7 +223,7 @@ public class BoardServiceTest {
                     .name("test_name")
                     .build());
 
-            when(boardRepository.findByIdWithAndReplyList(boardNo)).thenReturn(Optional.of(board));
+            when(boardRepository.findBoardById(boardNo)).thenReturn(Optional.of(board));
 
             UserException exception = assertThrows(UserException.class, () -> {
                 boardService.boardUpdate(boardUpdateDto, userDetailsDto, 1L);

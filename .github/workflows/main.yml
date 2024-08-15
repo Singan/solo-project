@@ -7,7 +7,7 @@ env:
 name: aws-deploy
 on:
   push:
-    branches: develop
+    branches: main
 jobs:
   build:
     runs-on: ubuntu-latest

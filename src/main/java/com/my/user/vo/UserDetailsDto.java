@@ -9,12 +9,12 @@ import java.util.Collection;
 public class UserDetailsDto extends UserViewDto implements UserDetails {
 
     public UserDetailsDto(User user) {
-        super(user.getNo(), user.getName());
+        super(user.getNo(), user.getName(), user.getUserRoles());
     }
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
-        return null;
+        return getRoles().stream().map(userRole -> userRole.getRole()).toList();
     }
 
     @Override
