@@ -5,6 +5,8 @@ import com.my.board.exception.BoardException;
 import com.my.board.vo.*;
 import com.my.config.exception.ErrorResponse;
 import com.my.user.vo.UserDetailsDto;
+import io.micrometer.core.annotation.Counted;
+import io.micrometer.core.annotation.Timed;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.media.Content;
@@ -25,6 +27,7 @@ import javax.security.sasl.AuthenticationException;
 @RequestMapping("/boards")
 @RequiredArgsConstructor
 @Tag(name = "게시판", description = "게시판 기능 API")
+@Timed("board")
 public class BoardController {
 
     private final BoardService boardService;

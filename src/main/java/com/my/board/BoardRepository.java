@@ -3,11 +3,11 @@ package com.my.board;
 import com.my.board.vo.Board;
 import com.my.board.vo.BoardListViewDto;
 
+import jakarta.persistence.LockModeType;
+import jakarta.persistence.QueryHint;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Slice;
-import org.springframework.data.jpa.repository.EntityGraph;
-import org.springframework.data.jpa.repository.JpaRepository;
-import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.jpa.repository.*;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
@@ -35,13 +35,13 @@ public interface BoardRepository extends JpaRepository<Board, Long> {
     @EntityGraph(attributePaths = {"writer" })
     Optional<Board> findById(Long id);
 
+    @Lock(LockModeType.PESSIMISTIC_WRITE)
+    @EntityGraph(attributePaths = {"writer","replyList","replyList.writer"})
+    Optional<Board> findBoardById(@Param("no") Long no);
 
-    @Query("select distinct b from Board b " +
-            "left join fetch b.replyList reply  " +
-            "left join fetch b.writer wr " +
-            "left join fetch reply.writer rwr " +
-            "where b.id = :no ")
-    Optional<Board> findByIdWithAndReplyList(@Param("no") Long no);
+    @Query("update Board set views = views+1 where id = :id")
+    @Modifying
+    void updateBoardByViewsWithLock(@Param("id") long id);
 
 //    @Modifying
 //    @EntityGraph(attributePaths = {"replyList"})
