@@ -29,4 +29,4 @@ vUser 999명을 기준으로 테스트 진행 시 task pool 의 사이즈를 170
 그렇게 데이터가 70만건까지 되니 문제를 발견하였습니다.
 
 ### [부하 테스트 성능 개선 과정](https://desert-elk-95d.notion.site/4e04fa73404d4cd8897b47eb08f75729?pvs=4)
-### [프로젝트 설명]https://www.notion.so/6e6df78c5eaa41188fc20aa5477947b7
+### [프로젝트 설명](https://www.notion.so/6e6df78c5eaa41188fc20aa5477947b7)
