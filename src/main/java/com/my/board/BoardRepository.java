@@ -2,16 +2,16 @@ package com.my.board;
 
 import com.my.board.vo.Board;
 import com.my.board.vo.BoardListViewDto;
-
 import jakarta.persistence.LockModeType;
-import jakarta.persistence.QueryHint;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Slice;
-import org.springframework.data.jpa.repository.*;
+import org.springframework.data.jpa.repository.EntityGraph;
+import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Lock;
+import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
-import java.util.List;
 import java.util.Optional;
 
 @Repository
@@ -35,12 +35,8 @@ public interface BoardRepository extends JpaRepository<Board, Long> {
     @EntityGraph(attributePaths = {"writer" })
     Optional<Board> findById(Long id);
 
-    @Lock(LockModeType.PESSIMISTIC_WRITE)
     @EntityGraph(attributePaths = {"writer","replyList","replyList.writer"})
     Optional<Board> findBoardById(@Param("no") Long no);
 
-//    @Modifying
-//    @EntityGraph(attributePaths = {"replyList"})
-//    Board deleteById(@Param("no")Long no);
 
 }
