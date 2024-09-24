@@ -15,7 +15,7 @@ import java.util.List;
 
 @Entity
 @Getter
-@NoArgsConstructor(access = AccessLevel.PROTECTED)
+@NoArgsConstructor
 public class Board {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -27,7 +27,7 @@ public class Board {
     @JsonIgnore
     private User writer;
 
-    @OneToMany(mappedBy = "board",cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "board", cascade = CascadeType.ALL)
     @BatchSize(size = 2)
     @JsonIgnore
     private List<Reply> replyList = new ArrayList<>();
@@ -38,17 +38,30 @@ public class Board {
     private String content;
     @ColumnDefault("0")
     private long views = 0;
+
+    @Version
+    private long version;
+
+    public void setVersion(long version) {
+        this.version = version;
+    }
+
+    public long getVersion() {
+        return version;
+    }
+
     @Builder
-    public Board(Long id,String title, Long writer, String content , LocalDateTime dateTime , long views) {
+    public Board(Long id, String title, Long writer, String content, LocalDateTime dateTime, long views,Long version) {
         this.id = id;
         this.title = title;
         this.writer = User.builder().no(writer).build();
         this.content = content;
         this.dateTime = dateTime;
         this.views = views;
+        this.version = version;
     }
 
-    public Long boardUpdate(String title , String content){
+    public Long boardUpdate(String title, String content) {
         this.title = title;
         this.content = content;
         dateTime = LocalDateTime.now();
@@ -59,7 +72,8 @@ public class Board {
         this.replyList.add(reply);
         reply.setBoard(this);
     }
-    public void updateViews(){
+
+    public void updateViews() {
         this.views++;
     }
 
